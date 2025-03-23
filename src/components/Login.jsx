@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-function Login() {
+function Login({ setUser }) {
     const navigate = useNavigate();
 
     const adminUser = { userType: "Admin", userName: "Jane", email: "jane@bristol.co.ke", password: "jane1234" };
-    const user = { userType: "Regular", userName: "John", email: "john@bristol.co.ke", password: "john1234" };
+    const regularUser = { userType: "Regular", userName: "John", email: "john@bristol.co.ke", password: "john1234" };
 
     const [logginData, setLoggedInUser] = useState({
         email: "",
@@ -30,13 +30,15 @@ function Login() {
         }
 
         if (logginData.email === adminUser.email && logginData.password === adminUser.password) {
-            toast.success("Login successful!");
-            navigate("/tickets"); 
-        } else if (logginData.email === user.email && logginData.password === user.password) {
-            toast.success("Login successful!");
-            navigate("/add-ticket"); 
+          setUser(adminUser);
+          toast.success("Login successful!");
+          navigate("/tickets");
+        } else if (logginData.email === regularUser.email && logginData.password === regularUser.password) {
+          setUser(regularUser);
+          toast.success("Login successful!");
+          navigate("/tickets");
         } else {
-            toast.error("Invalid credentials!");
+          toast.error("Invalid credentials!");
         }
     };
 
@@ -87,8 +89,8 @@ function Login() {
                     Don't have an account? <a href="#" className="text-blue-500 hover:underline">Sign up</a>
                 </p>
             </div>
-        </div>
-    );
+    </div>
+  );
 }
 
 export default Login;
