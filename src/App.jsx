@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Login from './components/Login';
 import Tickets from './components/Tickets';
 import AddTicket from './components/AddTicket';
+import Layout from './components/Layout';
 
 function App() {
     const dummyTickets = [
@@ -41,13 +42,15 @@ function App() {
       ];
       
     const [tickets, setTickets] = useState(dummyTickets)
+    const [loggedInUser, setUser] = useState(null);
+
     return (
         <Router>
           <Routes>
-             <Route path='/' element={<Login />} />
-             <Route path="/tickets" element={<Tickets tickets={tickets}/>} />
+             <Route path='/' element={<Layout><Login setUser={setUser}/></Layout>} />
+             <Route path="/tickets" element={<Layout><Tickets tickets={tickets} loggedInUser={loggedInUser}/></Layout>}/>
              <Route path='/add-ticket'
-               element={<AddTicket /> } />
+               element={<Layout><AddTicket setTickets={setTickets}/></Layout>} />
           </Routes> 
           <Toaster />
         </Router>
