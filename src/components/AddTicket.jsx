@@ -55,7 +55,9 @@ function AddTicket({ setTickets }) {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-600 text-sm mb-2">Description</label>
+            <label className="block text-gray-600 text-sm mb-2">
+              Description
+            </label>
             <textarea
               name="description"
               placeholder="Enter ticket description"

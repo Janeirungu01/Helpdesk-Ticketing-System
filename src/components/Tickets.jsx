@@ -41,9 +41,13 @@ function Tickets({ tickets, loggedInUser }) {
                 <th className="p-3 border">Title</th>
                 <th className="p-3 border">Description</th>
                 <th className="p-3 border">Priority</th>
-                {loggedInUser?.userType === "Admin" && (<th className="p-3 border">Status</th>)}
-                {loggedInUser?.userType === "Admin" && (<th className="border p-2">Actions</th>)}
-                </tr>
+                {loggedInUser?.userType === "Admin" && (
+                  <th className="p-3 border">Status</th>
+                )}
+                {loggedInUser?.userType === "Admin" && (
+                  <th className="border p-2">Actions</th>
+                )}
+              </tr>
             </thead>
             <tbody>
               {ticketList.map((ticket) => (
@@ -62,27 +66,29 @@ function Tickets({ tickets, loggedInUser }) {
                   >
                     {ticket.priority}
                   </td>
-                {loggedInUser?.userType == "Admin" && (
-                <td className="border p-2">
-                  {ticket.resolved ? "Resolved": "Pending"}
-                </td>
-              )}
-                {loggedInUser?.userType == "Admin" && (
-                <td className="border p-2">
-                  {!ticket.resolved ? (
-                    <button
-                      className="bg-green-500 text-white px-4 py-1 rounded"
-                      onClick={() => openModal(ticket)}
-                    >
-                      Resolve
-                    </button>
-                  ) : (
-                    <span className="text-green-600 font-bold">Resolved</span>
+                  {loggedInUser?.userType == "Admin" && (
+                    <td className="border p-2">
+                      {ticket.resolved ? "Resolved" : "Pending"}
+                    </td>
                   )}
-                </td>
-              )}
-            </tr>
-          ))}
+                  {loggedInUser?.userType == "Admin" && (
+                    <td className="border p-2">
+                      {!ticket.resolved ? (
+                        <button
+                          className="bg-green-500 text-white px-4 py-1 rounded"
+                          onClick={() => openModal(ticket)}
+                        >
+                          Resolve
+                        </button>
+                      ) : (
+                        <span className="text-green-600 font-bold">
+                          Resolved
+                        </span>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
