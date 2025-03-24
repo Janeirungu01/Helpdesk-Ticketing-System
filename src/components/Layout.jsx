@@ -26,10 +26,10 @@ function Layout({ children }) {
       </nav>
 
       <main>{children}</main>
-
+{/* 
       <footer className="bg-blue-600 text-white text-center p-4">
         Bristol Park Hospital Help Desk Ticketing System
-      </footer>
+      </footer> */}
     </div>
   );
 }
