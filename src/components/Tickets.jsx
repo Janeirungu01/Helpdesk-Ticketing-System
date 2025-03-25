@@ -29,8 +29,8 @@ function Tickets({ tickets, loggedInUser }) {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-5xl bg-white p-6 rounded-lg shadow-md">
+    <div className="flex justify-center items-center min-h-screen bg-gray-400">
+      <div className="w-full  max-w-7xl bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-700 mb-4">Tickets</h2>
 
         <div className="overflow-x-auto">
@@ -38,7 +38,10 @@ function Tickets({ tickets, loggedInUser }) {
             <thead>
               <tr className="bg-gray-200 text-gray-700">
                 <th className="p-3 border">Ticket ID</th>
-                <th className="p-3 border">Title</th>
+                <th className="p-3 border">Subject</th>
+                <th className="p-3 border">Category</th>
+                <th className="p-3 border">Department</th>
+                <th className="p-3 border">Email</th>
                 <th className="p-3 border">Description</th>
                 <th className="p-3 border">Priority</th>
                 {loggedInUser?.userType === "Admin" && (
@@ -53,7 +56,10 @@ function Tickets({ tickets, loggedInUser }) {
               {ticketList.map((ticket) => (
                 <tr key={ticket.ticketId} className="text-gray-700">
                   <td className="p-3 border">{ticket.ticketId}</td>
-                  <td className="p-3 border">{ticket.title}</td>
+                  <td className="p-3 border">{ticket.subject}</td>
+                  <td className="p-3 border">{ticket.category}</td>
+                  <td className="p-3 border">{ticket.department}</td>
+                  <td className="p-3 border">{ticket.email}</td>
                   <td className="p-3 border">{ticket.description}</td>
                   <td
                     className={`p-3 border font-bold text-white text-center ${
@@ -68,6 +74,7 @@ function Tickets({ tickets, loggedInUser }) {
                   </td>
                   {loggedInUser?.userType == "Admin" && (
                     <td className="border p-2">
+                      Regular
                       {ticket.resolved ? "Resolved" : "Pending"}
                     </td>
                   )}
@@ -102,7 +109,7 @@ function Tickets({ tickets, loggedInUser }) {
             </h3>
             <p className="text-gray-600 mb-4">
               Are you sure you want to mark{" "}
-              <span className="font-bold">{selectedTicket.title}</span> as
+              <span className="font-bold">{selectedTicket.subject}</span> as
               resolved?
             </p>
             <div className="flex justify-end space-x-2">
