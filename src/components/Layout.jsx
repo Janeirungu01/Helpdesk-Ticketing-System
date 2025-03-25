@@ -11,13 +11,16 @@ function Layout({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
       <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
-        <div className="text-xl font-bold">HelpDesk Ticketing System</div>
+        <div className="text-xl font-bold">Bristol Desk</div>
         <div className="flex space-x-6">
           <Link to="/tickets" className="hover:underline">
             Tickets
           </Link>
           <Link to="/add-ticket" className="hover:underline">
             Add Ticket
+          </Link>
+          <Link to="/create-ticket" className="hover:underline">
+            Create Ticket
           </Link>
           <button onClick={handleLogout} className="hover:underline">
             Logout
@@ -26,10 +29,6 @@ function Layout({ children }) {
       </nav>
 
       <main>{children}</main>
-{/* 
-      <footer className="bg-blue-600 text-white text-center p-4">
-        Bristol Park Hospital Help Desk Ticketing System
-      </footer> */}
     </div>
   );
 }

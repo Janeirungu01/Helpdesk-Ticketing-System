@@ -7,15 +7,15 @@ function Login({ setUser }) {
 
   const adminUser = {
     userType: "Admin",
-    userName: "Jane",
-    email: "jane@bristol.co.ke",
-    password: "jane1234",
+    userName: "Admin",
+    email: "admin@bristol.co.ke",
+    password: "Admin",
   };
   const regularUser = {
     userType: "Regular",
-    userName: "John",
-    email: "john@bristol.co.ke",
-    password: "john1234",
+    userName: "User",
+    email: "user@bristol.co.ke",
+    password: "User",
   };
 
   const [logginData, setLoggedInUser] = useState({
@@ -88,15 +88,7 @@ function Login({ setUser }) {
             />
           </div>
 
-          <div className="flex items-center justify-between mb-4">
-            <label className="flex items-center text-sm text-gray-600">
-              <input type="checkbox" className="mr-2" /> Remember me
-            </label>
-            <a href="#" className="text-blue-500 text-sm hover:underline">
-              Forgot Password?
-            </a>
-          </div>
-
+         
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
