@@ -74,7 +74,7 @@ function Tickets({ tickets, loggedInUser }) {
                   </td>
                   {loggedInUser?.userType == "Admin" && (
                     <td className="border p-2">
-                      Regular
+                      
                       {ticket.resolved ? "Resolved" : "Pending"}
                     </td>
                   )}
