@@ -1,34 +1,3 @@
-// import React from 'react'
-
-// function UserSidebar({ onSelect }) {
-//     return (
-//       <div className="w-1/6 h-screen bg-gray-800 text-white p-6 flex flex-col justify-between">
-//         <div>
-//           <h2 className="text-xl font-bold mb-6">Ticket System</h2>
-//           <ul className="space-y-4">
-//             <li>
-//               <button onClick={() => onSelect("create")} className="w-full text-left hover:text-gray-300">
-//                 📝 Create Ticket
-//               </button>
-//             </li>
-//             <li>
-//               <button onClick={() => onSelect("view")} className="w-full text-left hover:text-gray-300">
-//                 📄 View Tickets
-//               </button>
-//             </li>
-//           </ul>
-//         </div>
-//         <div>
-//           <button className="w-full text-left hover:text-gray-300">⚙️ Settings</button>
-//           <button className="w-full text-left mt-4 hover:text-red-400">🚪 Logout</button>
-//         </div>
-//       </div>
-//     );
-//   }
-  
-
-// export default UserSidebar
-
 import React, { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 

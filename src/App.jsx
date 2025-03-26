@@ -122,18 +122,16 @@ function App() {
             </Layout>
           }
         />
-        <Route
-          path="/add-ticket"
-          element={
-            <Layout>
-              <AddTicket setTickets={setTickets} />
-            </Layout>
-          }
-        />
 
         <Route
           path="/create-ticket"
-          element={<UserLayout setUserLayout={setUserLayout} />}
+          element={
+            <UserLayout
+              tickets={tickets}
+              loggedInUser={loggedInUser}
+              setTickets={setTickets}
+            />
+          }
         />
       </Routes>
       <Toaster />

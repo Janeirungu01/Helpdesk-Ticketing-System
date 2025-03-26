@@ -222,7 +222,7 @@ function Login({ setUser }) {
               onChange={handleChange}
               className="mr-2"
             />
-            <label className="text-gray-600 text-sm">Remember Me</label>
+            <label className="text-red-600 text-sm">Remember Me</label>
           </div>
 
           <button
