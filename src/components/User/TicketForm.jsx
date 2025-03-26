@@ -1,23 +1,23 @@
-//Add ticket
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export default function TicketForm() {
+export default function TicketForm({setTickets, setActiveView}) {
   const navigate = useNavigate();
-  
+
+
   const initialFormState = {
     subject: "",
     category: "",
     department: "",
-    email: "", 
+    email: "",
     description: "",
     priority: "Low",
   };
 
   const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState({});
-  const [ticketa, setTicketa] = useState([]);
+
 
   const validateForm = () => {
     let newErrors = {};
@@ -44,7 +44,7 @@ export default function TicketForm() {
 
     const newTicket = {
       ticketId: Date.now(),
-      title: formData.subject,
+      subject: formData.subject,
       category: formData.category,
       department: formData.department,
       email: formData.email,
@@ -53,7 +53,7 @@ export default function TicketForm() {
       resolved: false,
     };
 
-    setTicketa((prevTickets) => [...prevTickets, newTicket]);
+    setTickets((prevTickets) => [...prevTickets, newTicket]);
     toast.success(`Your request was added with ID ${newTicket.ticketId}`);
     navigate("/tickets");
   };
@@ -117,4 +117,3 @@ export default function TicketForm() {
     </div>
   );
 }
-
