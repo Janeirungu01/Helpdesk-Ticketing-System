@@ -6,57 +6,114 @@ import Login from "./components/Login";
 import Tickets from "./components/Tickets";
 import AddTicket from "./components/AddTicket";
 import Layout from "./components/Layout";
+import UserLayout from "./components/User/UserLayout";
 
 function App() {
   const dummyTickets = [
     {
       ticketId: "TCKT-001",
-      title: "System Crash on Login",
+      subject: "System Crash on Login",
       description:
         "User reports that the system crashes when attempting to log in.",
       priority: "High",
+      category: "System Issue",
+      department: "IT Support",
+      email: "it.support@hospital.com",
     },
     {
       ticketId: "TCKT-002",
-      title: "Printer Not Responding",
+      subject: "Printer Not Responding",
       description: "The office printer is not responding to print commands.",
       priority: "Medium",
+      category: "Hardware",
+      department: "Administration",
+      email: "admin.office@hospital.com",
     },
     {
       ticketId: "TCKT-003",
-      title: "Email Not Syncing",
+      subject: "Email Not Syncing",
       description: "User unable to sync company email with Outlook.",
       priority: "Low",
+      category: "Email & Communication",
+      department: "Human Resources",
+      email: "hr@hospital.com",
     },
     {
       ticketId: "TCKT-004",
-      title: "VPN Connection Issues",
+      subject: "Email Login Failed!",
       description:
-        "Remote employees report that the VPN connection drops frequently.",
+        "Currently unable to login to the email. Incorrect password error!",
       priority: "High",
+      category: "Email & Communication",
+      department: "Finance",
+      email: "finance@hospital.com",
     },
     {
       ticketId: "TCKT-005",
-      title: "Software Installation Request",
+      subject: "Software Installation Request",
       description: "Request to install the latest version of Microsoft Office.",
       priority: "Medium",
+      category: "Software Installation",
+      department: "IT Support",
+      email: "it.support@hospital.com",
+    },
+    {
+      ticketId: "TCKT-006",
+      subject: "PACS System Not Loading",
+      description:
+        "Radiology department unable to access patient scans on PACS system.",
+      priority: "High",
+      category: "Medical Software",
+      department: "Radiology",
+      email: "radiology@hospital.com",
+    },
+    {
+      ticketId: "TCKT-007",
+      subject: "Electronic Health Records (EHR) Access Denied",
+      description: "Doctor unable to access patient records in the EHR system.",
+      priority: "High",
+      category: "Medical Software",
+      department: "Outpatient Services",
+      email: "outpatient@hospital.com",
+    },
+    {
+      ticketId: "TCKT-008",
+      subject: "Network Downtime in Emergency Room",
+      description:
+        "No network connection in the ER, affecting patient admission.",
+      priority: "Critical",
+      category: "Network",
+      department: "Emergency Room",
+      email: "er@hospital.com",
+    },
+    {
+      ticketId: "TCKT-009",
+      subject: "Lab Results Not Uploading",
+      description: "Lab results not syncing to the hospital database.",
+      priority: "High",
+      category: "Medical Software",
+      department: "Laboratory",
+      email: "lab@hospital.com",
+    },
+    {
+      ticketId: "TCKT-010",
+      subject: "CCTV Camera Not Recording",
+      description: "Security cameras in the main entrance are not recording.",
+      priority: "Medium",
+      category: "Security",
+      department: "Security",
+      email: "security@hospital.com",
     },
   ];
 
   const [tickets, setTickets] = useState(dummyTickets);
   const [loggedInUser, setUser] = useState(null);
+  const [userLayout, setUserLayout] = useState();
 
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <Login setUser={setUser} />
-            </Layout>
-          }
-        />
+        <Route path="/" element={<Login setUser={setUser} />} />
         <Route
           path="/tickets"
           element={
@@ -72,6 +129,11 @@ function App() {
               <AddTicket setTickets={setTickets} />
             </Layout>
           }
+        />
+
+        <Route
+          path="/create-ticket"
+          element={<UserLayout setUserLayout={setUserLayout} />}
         />
       </Routes>
       <Toaster />

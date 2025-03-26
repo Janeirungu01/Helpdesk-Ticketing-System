@@ -8,13 +8,13 @@ function Login({ setUser }) {
   const adminUser = {
     userType: "Admin",
     userName: "Admin",
-    email: "admin@bristol.co.ke",
+    email: "admin@gmail.com",
     password: "Admin",
   };
   const regularUser = {
     userType: "Regular",
     userName: "User",
-    email: "user@bristol.co.ke",
+    email: "user@gmail.com",
     password: "User",
   };
 
@@ -91,18 +91,12 @@ function Login({ setUser }) {
          
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 p-4 transition"
           >
             Login
           </button>
         </form>
 
-        <p className="text-sm text-gray-600 mt-4 text-center">
-          Don't have an account?{" "}
-          <a href="#" className="text-blue-500 hover:underline">
-            Sign up
-          </a>
-        </p>
       </div>
     </div>
   );

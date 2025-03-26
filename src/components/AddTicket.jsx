@@ -108,7 +108,6 @@ function AddTicket({ setTickets }) {
     title: "",
     description: "",
     priority: "Low",
-
     department: "",
     subject: "",
     category: "",
