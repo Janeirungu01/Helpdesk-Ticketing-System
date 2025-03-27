@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import Login from "./components/Login";
 import Tickets from "./components/Tickets";
-import AddTicket from "./components/AddTicket";
 import Layout from "./components/Layout";
 import UserLayout from "./components/User/UserLayout";
 
