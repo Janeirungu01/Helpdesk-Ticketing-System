@@ -16,9 +16,6 @@ function Layout({ children }) {
           <Link to="/tickets" className="hover:underline">
             Tickets
           </Link>
-          <Link to="/add-ticket" className="hover:underline">
-            Add Ticket
-          </Link>
           <Link to="/create-ticket" className="hover:underline">
             Create Ticket
           </Link>
