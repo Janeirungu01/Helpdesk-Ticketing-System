@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Tickets({ tickets, loggedInUser }) {
   const [ticketList, setTicketList] = useState(
@@ -29,8 +30,8 @@ function Tickets({ tickets, loggedInUser }) {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-400">
-      <div className="w-full  max-w-7xl bg-white p-6 rounded-lg shadow-md">
+    <div className="flex justify-center items-center">
+      <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-700 mb-4">Tickets</h2>
 
         <div className="overflow-x-auto">
@@ -98,6 +99,12 @@ function Tickets({ tickets, loggedInUser }) {
               ))}
             </tbody>
           </table>
+          <Link
+        to="/add-ticket"
+        className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-lg"
+      >
+        Add New Ticket
+      </Link>
         </div>
       </div>
 
