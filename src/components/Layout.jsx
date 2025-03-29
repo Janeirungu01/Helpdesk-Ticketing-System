@@ -1,44 +1,9 @@
-// import React from "react";
-// import { Link, useNavigate } from "react-router-dom";
-
-// function Layout({ children }) {
-//   const navigate = useNavigate();
-
-//   const handleLogout = () => {
-//     navigate("/");
-//   };
-
-//   return (
-//     <div className="flex flex-col min-h-screen">
-//       <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
-//         <div className="text-xl font-bold">Bristol Desk</div>
-//         <div className="flex space-x-6">
-//           <Link to="/tickets" className="hover:underline">
-//             Tickets
-//           </Link>
-//           <Link to="/create-ticket" className="hover:underline">
-//             Create Ticket
-//           </Link>
-//           <button onClick={handleLogout} className="hover:underline">
-//             Logout
-//           </button>
-//         </div>
-//       </nav>
-
-//       <main>{children}</main>
-//     </div>
-//   );
-// }
-
-// export default Layout;
-
-
 import { useState } from "react";
 import { FaBars, FaTicketAlt, FaPlus, FaSignOutAlt } from "react-icons/fa";
 
-export default function Layout({ children, user }) {
+export default function Layout({ children}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [loggedInUser, setUser] = useState(user);
+  const user=JSON.parse(localStorage.getItem("user"));
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -46,7 +11,7 @@ export default function Layout({ children, user }) {
       <aside
         className={`${
           isCollapsed ? "w-16" : "w-64"
-        } bg-blue-600 text-white transition-all duration-300 flex flex-col`}
+        } bg-blue-700 text-white transition-all duration-300 flex flex-col`}
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-4">
@@ -94,7 +59,7 @@ export default function Layout({ children, user }) {
       <div className="flex flex-col flex-1 h-screen" >
         {/* Navbar */}
         <header className="bg-white shadow-md p-4 flex justify-end">
-           <h2 className="text-gray-700">Welcome, {setUser.userName || "Guest"}</h2>
+           <h2 className="text-gray-700">Welcome, {user.userName || "Guest"}</h2>
         </header>
         
 
