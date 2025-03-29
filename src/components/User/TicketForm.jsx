@@ -10,25 +10,13 @@ export default function TicketForm({setTickets}) {
     subject: "",
     category: "",
     department: "",
-    // email: "",
+    email: "",
     description: "",
     priority: "Low",
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  // const [errors, setErrors] = useState({});
 
-
-  // const validateForm = () => {
-  //   let newErrors = {};
-  //   Object.keys(formData).forEach((key) => {
-  //     if (!formData[key].trim()) {
-  //       newErrors[key] = `${key} is required`;
-  //     }
-  //   });
-  //   setErrors(newErrors);
-  //   return Object.keys(newErrors).length === 0;
-  // };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -64,7 +52,7 @@ export default function TicketForm({setTickets}) {
 
   const renderInputField = (key) => (
     <div key={key}>
-      <label className="block font-medium capitalize text-black">
+      <label className="block font-medium capitalize text-gray-600 ">
         {key} <span className="text-red-500">*</span>
       </label>
       {key === "priority" ? (
@@ -72,7 +60,7 @@ export default function TicketForm({setTickets}) {
           name={key}
           value={formData[key]}
           onChange={handleChange}
-          className="w-full border p-2 rounded mt-1 text-black bg-white"
+          className="w-full border p-2 rounded mt-1 text-gray-600 bg-white"
         >
           <option value="High">High</option>
           <option value="Medium">Medium</option>
