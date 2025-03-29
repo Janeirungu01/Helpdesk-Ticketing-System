@@ -5,7 +5,6 @@ import { useState } from "react";
 import Login from "./components/Login";
 import Tickets from "./components/Tickets";
 import Layout from "./components/Layout";
-import UserLayout from "./components/User/UserLayout";
 import TicketForm from "./components/User/TicketForm";
 
 function App() {
@@ -46,12 +45,11 @@ function App() {
       category: "Software Installation",
       department: "IT Support",
       email: "it.support@hospital.com",
-    }, 
+    },
   ];
 
   const [tickets, setTickets] = useState(dummyTickets);
   const [loggedInUser, setUser] = useState(null);
-
 
   return (
     <Router>
@@ -61,7 +59,7 @@ function App() {
           path="/tickets"
           element={
             <Layout>
-              <Tickets tickets={tickets} loggedInUser={loggedInUser} />
+              <Tickets tickets={tickets} />
             </Layout>
           }
         />
@@ -69,33 +67,14 @@ function App() {
           path="/add-ticket"
           element={
             <Layout>
-              <TicketForm tickets={tickets} loggedInUser={loggedInUser} />
+              <TicketForm
+                tickets={tickets}
+                loggedInUser={loggedInUser}
+                setTickets={setTickets}
+              />
             </Layout>
           }
         />
-      
-        {/* <Route
-          path="/create-ticket"
-          element={
-            <UserLayout
-              tickets={tickets}
-              loggedInUser={loggedInUser}
-              setTickets={setTickets}
-            />
-          }
-        /> */}
-
-          {/* <Route
-          path="/add-ticket"
-          element={
-            <Layout>
-              <TicketForm />
-              tickets={tickets}
-              loggedInUser={loggedInUser}
-              setTickets={setTickets}
-              </Layout>
-          }
-        /> */}
       </Routes>
       <Toaster />
     </Router>
