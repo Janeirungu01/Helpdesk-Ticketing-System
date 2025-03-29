@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import Layout from "./Layout";
 
 function Login({ setUser }) {
   const navigate = useNavigate();
@@ -57,6 +56,7 @@ function Login({ setUser }) {
       logginData.password === adminUser.password
     ) {
       setUser(adminUser);
+      localStorage.setItem("user", JSON.stringify(adminUser))
       toast.success("Login successful!");
       if (logginData.rememberMe) {
         localStorage.setItem("rememberedEmail", logginData.email);
@@ -69,6 +69,7 @@ function Login({ setUser }) {
       logginData.password === regularUser.password
     ) {
       setUser(regularUser);
+      localStorage.setItem("user", JSON.stringify(regularUser))
       toast.success("Login successful!");
       if (logginData.rememberMe) {
         localStorage.setItem("rememberedEmail", logginData.email);
