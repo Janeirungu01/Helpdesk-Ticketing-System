@@ -57,11 +57,11 @@ function Tickets({ tickets, loggedInUser }) {
               {ticketList.map((ticket) => (
                 <tr key={ticket.ticketId} className="text-gray-700">
                   <td className="p-3 border">{ticket.ticketId}</td>
-                  <td className="p-3 border">{ticket.subject}</td>
-                  <td className="p-3 border">{ticket.category}</td>
-                  <td className="p-3 border">{ticket.department}</td>
-                  <td className="p-3 border">{ticket.email}</td>
-                  <td className="p-3 border">{ticket.description}</td>
+                  <td className="p-2 border">{ticket.subject}</td>
+                  <td className="p-2 border">{ticket.category}</td>
+                  <td className="p-2 border">{ticket.department}</td>
+                  <td className="p-2 border">{ticket.email}</td>
+                  <td className="p-2 border">{ticket.description}</td>
                   <td
                     className={`p-3 border font-bold text-white text-center ${
                       ticket.priority === "High"
