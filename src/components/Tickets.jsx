@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-function Tickets({ tickets, loggedInUser }) {
+function Tickets({ tickets }) {
+  const loggedInUser = JSON.parse(localStorage.getItem("user"));
   const [ticketList, setTicketList] = useState(
     tickets.map((ticket) => ({ ...ticket, resolved: false }))
   );
@@ -75,7 +76,6 @@ function Tickets({ tickets, loggedInUser }) {
                   </td>
                   {loggedInUser?.userType == "Admin" && (
                     <td className="border p-2">
-                      
                       {ticket.resolved ? "Resolved" : "Pending"}
                     </td>
                   )}
@@ -100,11 +100,11 @@ function Tickets({ tickets, loggedInUser }) {
             </tbody>
           </table>
           <Link
-        to="/add-ticket"
-        className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-lg"
-      >
-        Add New Ticket
-      </Link>
+            to="/add-ticket"
+            className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-lg"
+          >
+            Add New Ticket
+          </Link>
         </div>
       </div>
 
