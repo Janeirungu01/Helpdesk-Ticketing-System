@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export default function TicketForm({setTickets, setActiveView}) {
+export default function TicketForm({setTickets}) {
   const navigate = useNavigate();
 
 
@@ -10,25 +10,25 @@ export default function TicketForm({setTickets, setActiveView}) {
     subject: "",
     category: "",
     department: "",
-    email: "",
+    // email: "",
     description: "",
     priority: "Low",
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  const [errors, setErrors] = useState({});
+  // const [errors, setErrors] = useState({});
 
 
-  const validateForm = () => {
-    let newErrors = {};
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key].trim()) {
-        newErrors[key] = `${key} is required`;
-      }
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  // const validateForm = () => {
+  //   let newErrors = {};
+  //   Object.keys(formData).forEach((key) => {
+  //     if (!formData[key].trim()) {
+  //       newErrors[key] = `${key} is required`;
+  //     }
+  //   });
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -89,13 +89,13 @@ export default function TicketForm({setTickets, setActiveView}) {
           }`}
         />
       )}
-      {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+      {/* {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>} */}
     </div>
   );
 
   return (
-    <div className="w-3/4 mx-auto bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-xl font-bold mb-4 text-black">Create Ticket</h2>
+    <div className="w-full mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <h2 className="text-xl font-bold mb-4 text-gray-600">Create Ticket</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {Object.keys(formData).map(renderInputField)}
         <div className="flex justify-end space-x-2">

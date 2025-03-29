@@ -1,18 +1,21 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import UserSidebar from "./UserSidebar";
 import TicketForm from "./TicketForm";
 
 export default function UserLayout({loggedInUser, tickets, setTickets}) {
-   const [ticketList, setTicketList] = useState(
-      tickets.map((ticket) => ({ ...ticket, resolved: false }))
-    );
+  //  const [ticketList, setTicketList] = useState(
+  //     tickets.map((ticket) => ({ ...ticket, resolved: false }))
+  //   );
   const [activeView, setActiveView] = useState("create");
 
   return (
     <div className="flex h-screen">
       <UserSidebar onSelect={setActiveView} />
       <div className="flex-1 p-6">
-        {activeView === "create" ? <TicketForm setActiveView = {setActiveView} setTickets= {setTickets}/> : <div className="overflow-x-auto">
+      {activeView === "create" ? <TicketForm /> : <span>Ticket loading...</span>}
+
+        {/* {activeView === "create" ? <TicketForm setActiveView = {setActiveView} setTickets= {setTickets}/> : <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-gray-200">
             <thead>
               <tr className="bg-gray-200 text-gray-700">
@@ -77,7 +80,7 @@ export default function UserLayout({loggedInUser, tickets, setTickets}) {
               ))}
             </tbody>
           </table>
-        </div>}
+        </div>} */}
       </div>
     </div>
   );
