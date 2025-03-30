@@ -1,3 +1,4 @@
+
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
@@ -14,8 +15,10 @@ function App() {
       description: "Lab results not syncing to the hospital database.",
       priority: "High",
       category: "Medical Software",
-      department: "Laboratory",
       email: "lab@hospital.com",
+      department: "Laboratory",
+      branch:"Tassia",
+      date: "2025-03-28",
     },
     {
       ticketId: "TCKT-002",
@@ -24,7 +27,9 @@ function App() {
       priority: "Medium",
       category: "Hardware",
       department: "Administration",
-      email: "admin.office@hospital.com",
+      email: "reception@hospital.com",
+      branch: "Fedha",
+      date: "2025-03-29",
     },
     {
       ticketId: "TCKT-003",
@@ -35,6 +40,8 @@ function App() {
       category: "Email & Communication",
       department: "Finance",
       email: "finance@hospital.com",
+      branch: "Utawala",
+      date: "2025-03-31",
     },
     {
       ticketId: "TCKT-004",
@@ -44,6 +51,8 @@ function App() {
       category: "Software Installation",
       department: "IT Support",
       email: "it.support@hospital.com",
+      branch: "Machakos",
+      date: "2025-03-20",
     },
   ];
 
