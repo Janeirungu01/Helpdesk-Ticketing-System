@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { FaBars, FaTicketAlt, FaPlus, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function Layout({ children}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const user=JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+
+  const handleLogout = () =>{
+    navigate("/");
+  }
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -47,7 +53,7 @@ export default function Layout({ children}) {
 
         {/* Logout Button */}
         <div className="p-4">
-          <button className="flex items-center space-x-3 w-full p-2 hover:bg-red-500 rounded-lg">
+          <button onClick={handleLogout} className="flex items-center space-x-3 w-full p-2 hover:bg-red-500 rounded-lg">
             <FaSignOutAlt />
             {!isCollapsed && <span>Logout</span>}
             
