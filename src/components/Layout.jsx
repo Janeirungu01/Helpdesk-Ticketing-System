@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaBars, FaTicketAlt, FaPlus, FaSignOutAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Layout({ children}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -34,20 +34,20 @@ export default function Layout({ children}) {
 
         {/* Sidebar Links */}
         <nav className="flex-1 px-2 space-y-2">
-          <a
-            href="/tickets"
+          <Link
+           to="/tickets"
             className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
           >
             <FaTicketAlt />
             {!isCollapsed && <span>Tickets</span>}
-          </a>
-          <a
-            href="/add-ticket"
+          </Link>
+          <Link
+            to="/add-ticket"
             className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
           >
             <FaPlus />
             {!isCollapsed && <span>Add Ticket</span>}
-          </a>
+          </Link>
         </nav>
 
 
