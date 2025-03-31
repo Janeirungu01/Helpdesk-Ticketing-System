@@ -42,8 +42,8 @@ function Tickets({ tickets }) {
                 <th className="p-3 border">Ticket ID</th>
                 <th className="p-3 border">Subject</th>
                 <th className="p-3 border">Category</th>
-                <th className="p-3 border">Department</th>
-                <th className="p-3 border">Email</th>
+                <th className="p-3 border">Branch</th>
+                <th className="p-3 border">Date</th>
                 <th className="p-3 border">Description</th>
                 <th className="p-3 border">Priority</th>
                 {loggedInUser?.userType === "Admin" && (
@@ -60,8 +60,8 @@ function Tickets({ tickets }) {
                   <td className="p-3 border">{ticket.ticketId}</td>
                   <td className="p-2 border">{ticket.subject}</td>
                   <td className="p-2 border">{ticket.category}</td>
-                  <td className="p-2 border">{ticket.department}</td>
-                  <td className="p-2 border">{ticket.email}</td>
+                  <td className="p-2 border">{ticket.branch}</td>
+                  <td className="p-2 border">{ticket.date.toString()}</td>
                   <td className="p-2 border">{ticket.description}</td>
                   <td
                     className={`p-3 border font-bold text-white text-center ${
@@ -71,6 +71,7 @@ function Tickets({ tickets }) {
                         ? "bg-amber-500"
                         : "bg-blue-500"
                     }`}
+                    
                   >
                     {ticket.priority}
                   </td>
