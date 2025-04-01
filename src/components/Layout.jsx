@@ -41,13 +41,21 @@ export default function Layout({ children}) {
             <FaTicketAlt />
             {!isCollapsed && <span>Tickets</span>}
           </Link>
-          <Link
+          {user.userType=="Regular" && (<Link
             to="/add-ticket"
             className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
           >
             <FaPlus />
             {!isCollapsed && <span>Add Ticket</span>}
-          </Link>
+          </Link>)}
+
+          {user.userType=="Admin" && (<Link
+            to="/manage-users"
+            className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
+          >
+            <FaPlus />
+            {!isCollapsed && <span>Manage Users</span>}
+          </Link>)}
         </nav>
 
 
@@ -75,5 +83,4 @@ export default function Layout({ children}) {
     </div>
   );
 }
-
 
