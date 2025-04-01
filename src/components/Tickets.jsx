@@ -61,7 +61,7 @@ function Tickets({ tickets }) {
                   <td className="p-2 border">{ticket.subject}</td>
                   <td className="p-2 border">{ticket.category}</td>
                   <td className="p-2 border">{ticket.branch}</td>
-                  <td className="p-2 border">{ticket.date.toString()}</td>
+                  <td className="p-2 border">{new Date(ticket.date).toLocaleDateString()}</td>
                   <td className="p-2 border">{ticket.description}</td>
                   <td
                     className={`p-3 border font-bold text-white text-center ${
@@ -84,7 +84,7 @@ function Tickets({ tickets }) {
                     <td className="border p-2">
                       {!ticket.resolved ? (
                         <button
-                          className="bg-green-500 text-white px-4 py-1 rounded"
+                          className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
                           onClick={() => openModal(ticket)}
                         >
                           Resolve
@@ -100,17 +100,18 @@ function Tickets({ tickets }) {
               ))}
             </tbody>
           </table>
-          <Link
+          {loggedInUser.userType == "Regular" && (<Link
             to="/add-ticket"
             className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-lg"
           >
             Add New Ticket
-          </Link>
+          </Link>)}
+          
         </div>
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-blue-100 bg-opacity-25 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">
               Resolve Ticket
