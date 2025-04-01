@@ -11,8 +11,9 @@ function Login({ setUser }) {
     email: "admin@hospital.com",
     password: "Admin",
   };
-  const regularUser = {
-    userType: "Regular",
+  const regularUser =
+    {
+    userType: "Regular",    
     userName: "User",
     email: "user@hospital.com",
     password: "User",
