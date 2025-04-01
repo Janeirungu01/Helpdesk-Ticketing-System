@@ -46,4 +46,12 @@
 	th {
 		@apply font-semibold;
 	}
+    input, select {
+        @apply text-sm p-10 text-gray-600;
+    }
+    label {
+        @apply  font-medium
+    }
+       
+    
 }
