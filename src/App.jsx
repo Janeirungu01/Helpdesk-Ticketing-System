@@ -6,6 +6,7 @@ import Login from "./components/Login";
 import Tickets from "./components/Tickets";
 import Layout from "./components/Layout";
 import TicketForm from "./components/User/TicketForm";
+import ManageUsers from "./components/User/ManageUsers";
 
 function App() {
   const dummyTickets = [
@@ -83,6 +84,16 @@ function App() {
             </Layout>
           }
         />
+
+<Route path="/" element={<Login setUser={setUser} />} />
+        <Route
+          path="/manage-users"
+          element={
+            <Layout>
+              <ManageUsers />
+            </Layout>
+          }
+          />
       </Routes>
       <Toaster />
     </Router>
