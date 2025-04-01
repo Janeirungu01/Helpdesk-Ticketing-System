@@ -16,7 +16,7 @@ export default function TicketForm({ setTickets }) {
 
   const [formData, setFormData] = useState(initialFormState);
   const today = new Date().toISOString().split("T")[0]; 
-
+ 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -50,11 +50,11 @@ export default function TicketForm({ setTickets }) {
   };
 
   return (
-    <div className="w-full mx-auto bg-white p-6 rounded-lg shadow-lg">
+    <div className="w-full mx-auto bg-white p-6 rounded-lg shadow-lg ">
       <h2 className="text-xl font-bold mb-4 text-gray-600">Create Ticket</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 ">
         <div>
-          <label className="block font-medium capitalize text-gray-600">
+          <label className="block capitalize text-gray-600">
             Subject <span className="text-red-500">*</span>
           </label>
           <input
@@ -62,7 +62,7 @@ export default function TicketForm({ setTickets }) {
             name="subject"
             value={formData.subject}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1 text-black bg-white"
+            className="w-full border p-2 rounded mt-1 text-gray-600 bg-white"
           />
         </div>
 
@@ -79,7 +79,7 @@ export default function TicketForm({ setTickets }) {
             <option value="">Select Category</option>
             <option value="Hardware Problem">Hardware Problem</option>
             <option value="Software Problem">Software Problem</option>
-            <option value="Email Problem">Email Problem</option>
+            <option value="User Account">Account Problem</option>
           </select>
         </div>
 
@@ -102,7 +102,7 @@ export default function TicketForm({ setTickets }) {
             name="branch"
             value={formData.branch}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1 text-gray-600 bg-white"
+            className="w-full border p-2 rounded mt-1 text-gray-600 text-sm bg-white"
           >
             <option value="">Select Branch</option>
             <option value="Fedha">Fedha</option>
@@ -121,6 +121,7 @@ export default function TicketForm({ setTickets }) {
             type="date"
             name="date"
             min={today}
+            // value={today}
             onChange={handleChange}
             className="w-full border p-2 rounded mt-1 text-gray-600 bg-white"
           />
@@ -134,7 +135,8 @@ export default function TicketForm({ setTickets }) {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1 text-black bg-white h-24"
+            className="w-full border p-2 rounded mt-1 text-gray-600 bg-white h-24"
+            
           />
         </div>
 
@@ -146,7 +148,7 @@ export default function TicketForm({ setTickets }) {
             name="priority"
             value={formData.priority}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1 text-gray-600 bg-white"
+            className="w-full border p-2 rounded mt-1 bg-white "
           >
             <option value="High">High</option>
             <option value="Medium">Medium</option>
