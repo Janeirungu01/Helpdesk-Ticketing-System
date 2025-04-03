@@ -4,9 +4,15 @@ const ManageUsers = () => {
   const [users, setUsers] = useState([
     {
       id: 1,
-      name: "Alice Johnson",
+      name: "Admin",
       userType: "Admin",
-      email: "alice@hospital.com",
+      email: "admin@hospital.com",
+    },
+    {
+      id: 4,
+      name: "user",
+      userType: "Regular",
+      email: "user@hospital.com",
     },
     {
       id: 2,
@@ -20,12 +26,7 @@ const ManageUsers = () => {
       userType: "Admin",
       email: "charlie@hospital.com",
     },
-    {
-      id: 4,
-      name: "David Lee",
-      userType: "Regular",
-      email: "david@hospital.com",
-    },
+    
   ]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,7 +84,7 @@ const ManageUsers = () => {
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4 text-gray-700">Manage Users</h2>
 
-      {/* Search, Add & Filter Section */}
+      
       <div className="flex items-center justify-between mb-4">
         <input
           type="text"
