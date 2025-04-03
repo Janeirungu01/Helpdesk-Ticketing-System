@@ -9,6 +9,7 @@ export default function TicketForm({ setTickets }) {
     subject: "",
     category: "",
     branch: "",
+
     date: "",
     description: "",
     priority: "Low",
@@ -121,7 +122,6 @@ export default function TicketForm({ setTickets }) {
             type="date"
             name="date"
             min={today}
-            // value={today}
             onChange={handleChange}
             className="w-full border p-2 rounded mt-1 text-gray-600 bg-white"
           />
