@@ -7,26 +7,29 @@ const ManageUsers = () => {
       name: "Admin",
       userType: "Admin",
       email: "admin@hospital.com",
+      status: "active",
     },
     {
       id: 4,
       name: "user",
       userType: "Regular",
       email: "user@hospital.com",
+      status: "active",
     },
     {
       id: 2,
       name: "Bob Smith",
       userType: "Regular",
       email: "bob@hospital.com",
+      status: "suspended",
     },
     {
       id: 3,
       name: "Charlie Brown",
       userType: "Admin",
       email: "charlie@hospital.com",
+      status: "active",
     },
-    
   ]);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,19 +59,26 @@ const ManageUsers = () => {
     setFilterType(e.target.value);
   };
 
-  // Handle delete user
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+  const handleToggleStatus = (id) => {
+    setUsers(
+      users.map((user) =>
+        user.id === id
+          ? {
+              ...user,
+              status: user.status === "active" ? "suspended" : "active",
+            }
+          : user
+      )
+    );
   };
 
-  // Handle add/update user
   const handleSaveUser = (userData) => {
     if (editUser) {
       setUsers(
         users.map((user) => (user.id === editUser.id ? userData : user))
       );
     } else {
-      setUsers([...users, { ...userData, id: Date.now() }]);
+      setUsers([...users, { ...userData, id: Date.now(), status: "active" }]);
     }
     closeModal();
   };
@@ -84,7 +94,6 @@ const ManageUsers = () => {
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4 text-gray-700">Manage Users</h2>
 
-      
       <div className="flex items-center justify-between mb-4">
         <input
           type="text"
@@ -119,6 +128,7 @@ const ManageUsers = () => {
             <th className="p-3 border">Name</th>
             <th className="p-3 border">Email</th>
             <th className="p-3 border">User Type</th>
+            <th className="p-3 border">Status</th>
             <th className="p-3 border">Actions</th>
           </tr>
         </thead>
@@ -129,18 +139,30 @@ const ManageUsers = () => {
               <td className="p-3 border">{user.name}</td>
               <td className="p-3 border">{user.email}</td>
               <td className="p-3 border">{user.userType}</td>
-              <td className="p-3 border">
+              <td className="p-3 border">{user.status}</td>
+              <td className="p-3 border space-x-2">
                 <button
-                  className="bg-blue-500 text-white px-3 py-1 rounded mr-2 hover:bg-blue-700"
-                  onClick={() => openEditModal(user)}
+                  className={`px-3 py-1 rounded text-white ${
+                    user.status === "suspended"
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-500 hover:bg-blue-700"
+                  }`}
+                  onClick={() =>
+                    user.status === "active" && openEditModal(user)
+                  }
+                  disabled={user.status === "suspended"}
                 >
                   Edit
                 </button>
                 <button
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
-                  onClick={() => handleDelete(user.id)}
+                  className={`px-3 py-1 rounded text-white ${
+                    user.status === "active"
+                      ? "bg-red-500 hover:bg-red-700"
+                      : "bg-green-500 hover:bg-green-700"
+                  }`}
+                  onClick={() => handleToggleStatus(user.id)}
                 >
-                  Delete
+                  {user.status === "active" ? "Suspend" : "Unsuspend"}
                 </button>
               </td>
             </tr>
@@ -161,7 +183,7 @@ const ManageUsers = () => {
 
 const UserModal = ({ onSave, onClose, editUser }) => {
   const [userData, setUserData] = useState(
-    editUser || { name: "", email: "", userType: "Regular" }
+    editUser || { name: "", email: "", userType: "Regular", status: "active" }
   );
 
   const handleChange = (e) => {
@@ -178,7 +200,7 @@ const UserModal = ({ onSave, onClose, editUser }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-blue-200  flex justify-center items-center">
+    <div className="fixed inset-0 bg-blue-200 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h3 className="text-lg font-semibold text-gray-700 mb-4">
           {editUser ? "Edit User" : "Add User"}
