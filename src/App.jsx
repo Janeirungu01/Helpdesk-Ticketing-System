@@ -2,12 +2,13 @@
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { dummyTickets } from "../Helpers/DummyData";
+import { dummyTickets } from "./Helpers/DummyData";
 import Login from "./components/Login";
 import Tickets from "./components/Tickets";
 import Layout from "./components/Layout";
 import TicketForm from "./components/User/TicketForm";
 import ManageUsers from "./components/User/ManageUsers";
+import Dashboard from "./components/User/Dashboard";
 
 function App() {
   const [tickets, setTickets] = useState(dummyTickets);
@@ -44,6 +45,14 @@ function App() {
           element={
             <Layout>
               <ManageUsers />
+            </Layout>
+          }
+          />
+           <Route
+          path="/view-users"
+          element={
+            <Layout>
+              <Dashboard />
             </Layout>
           }
           />

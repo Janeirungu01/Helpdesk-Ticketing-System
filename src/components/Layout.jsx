@@ -71,7 +71,7 @@ export default function Layout({ children}) {
 
       {/* Main Content */}
       <div className="flex flex-col flex-1 h-screen" >
-        {/* Navbar */}
+       
         <header className="bg-white shadow-md p-4 flex justify-end">
            <h2 className="text-gray-700">Welcome, {user.userName || "Guest"}</h2>
         </header>
