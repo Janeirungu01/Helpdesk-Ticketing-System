@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaBars, FaTicketAlt, FaPlus, FaSignOutAlt } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Layout({ children}) {
@@ -13,13 +14,13 @@ export default function Layout({ children}) {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
+
       <aside
         className={`${
           isCollapsed ? "w-16" : "w-64"
         } bg-blue-700 text-white transition-all duration-300 flex flex-col`}
       >
-        {/* Sidebar Header */}
+  
         <div className="flex items-center justify-between p-4">
           {!isCollapsed && (
             <h2 className="text-lg font-bold">Bristol Desk</h2>
@@ -32,7 +33,6 @@ export default function Layout({ children}) {
           </button>
         </div>
 
-        {/* Sidebar Links */}
         <nav className="flex-1 px-2 space-y-2">
           <Link
            to="/tickets"
@@ -48,6 +48,14 @@ export default function Layout({ children}) {
             <FaPlus />
             {!isCollapsed && <span>Add Ticket</span>}
           </Link>)}
+          
+        {user.userType=="Admin" && (<Link
+            to="/view-users"
+            className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
+          >
+            <MdDashboard />
+            {!isCollapsed && <span>Dashboard</span>}
+          </Link>)}
 
           {user.userType=="Admin" && (<Link
             to="/manage-users"
@@ -57,6 +65,7 @@ export default function Layout({ children}) {
             {!isCollapsed && <span>Manage Users</span>}
           </Link>)}
         </nav>
+
 
 
         {/* Logout Button */}
@@ -69,7 +78,7 @@ export default function Layout({ children}) {
         </div>
       </aside>
 
-      {/* Main Content */}
+     
       <div className="flex flex-col flex-1 h-screen" >
        
         <header className="bg-white shadow-md p-4 flex justify-end">
@@ -78,7 +87,7 @@ export default function Layout({ children}) {
         
 
         {/* Content */}
-        <main className="flex-1 p-6 bg-blue-100 overflow-hidden">{children}</main>
+        <main className="flex-1 p-4 bg-blue-50 overflow-hidden">{children}</main>
       </div>
     </div>
   );
