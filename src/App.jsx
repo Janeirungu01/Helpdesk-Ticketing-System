@@ -9,6 +9,7 @@ import Layout from "./components/Layout";
 import TicketForm from "./components/User/TicketForm";
 import ManageUsers from "./components/User/ManageUsers";
 import Dashboard from "./components/User/Dashboard";
+import Department from "./components/ManageDepartments";
 
 function App() {
   const [tickets, setTickets] = useState(dummyTickets);
@@ -53,6 +54,15 @@ function App() {
           element={
             <Layout>
               <Dashboard />
+            </Layout>
+          }
+          />
+
+<Route
+          path="/add-departments"
+          element={
+            <Layout>
+              <Department />
             </Layout>
           }
           />

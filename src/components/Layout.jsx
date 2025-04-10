@@ -64,6 +64,13 @@ export default function Layout({ children}) {
             <FaPlus />
             {!isCollapsed && <span>Manage Users</span>}
           </Link>)}
+          {user.userType=="Admin" && (<Link
+            to="/add-departments"
+            className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
+          >
+            <FaPlus />
+            {!isCollapsed && <span>Departments</span>}
+          </Link>)}
         </nav>
 
 
