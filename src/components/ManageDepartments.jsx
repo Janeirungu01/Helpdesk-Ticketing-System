@@ -1,4 +1,13 @@
 import React, { useState } from "react";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Switch,
+  FormControlLabel,
+} from "@mui/material";
 
 const ManageDepartments = () => {
   const [departments, setDepartments] = useState([
@@ -9,7 +18,7 @@ const ManageDepartments = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDept, setEditDept] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
 
   const openModal = () => {
     setEditDept(null);
@@ -36,7 +45,9 @@ const ManageDepartments = () => {
   const handleSaveDepartment = (deptData) => {
     if (editDept) {
       setDepartments(
-        departments.map((dept) => (dept.id === editDept.id ? deptData : dept))
+        departments.map((dept) =>
+          dept.id === editDept.id ? { ...deptData, id: editDept.id } : dept
+        )
       );
     } else {
       setDepartments([
@@ -48,8 +59,8 @@ const ManageDepartments = () => {
   };
 
   const filteredDepartments = departments.filter((dept) =>
-    dept.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+        dept.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
@@ -58,13 +69,16 @@ const ManageDepartments = () => {
       </h2>
 
       <div className="flex justify-between items-center mb-4">
-        <input
+      <input
           type="text"
           placeholder="Search departments..."
+
           className=" px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1 "
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        
+
         <button
           onClick={openModal}
           className="px-4 py-2 bg-green-500 text-white rounded-lg"
@@ -82,12 +96,14 @@ const ManageDepartments = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredDepartments.map((dept) => (
+
+        {filteredDepartments.map((dept) => (
             <tr key={dept.id}>
               <td className="p-3 border">{dept.name}</td>
               <td className="p-3 border">
                 {dept.visible ? "Visible" : "Private"}
               </td>
+         
               <td className="p-3 border space-x-2">
                 <button
                   className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-700"
@@ -120,6 +136,7 @@ const ManageDepartments = () => {
   );
 };
 
+// MUI Modal 
 const DepartmentModal = ({ onSave, onClose, editDept }) => {
   const [deptData, setDeptData] = useState(
     editDept || { name: "", visible: true }
@@ -142,51 +159,58 @@ const DepartmentModal = ({ onSave, onClose, editDept }) => {
     onSave(deptData);
   };
 
-  return (
-    <div className="fixed inset-0 bg-blue-200 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">
-          {editDept ? "Edit Department" : "Add Department"}
-        </h3>
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    borderRadius: "12px",
+    boxShadow: 24,
+    p: 4,
+  };
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
+  return (
+    <Modal open onClose={onClose}>
+      <Box sx={style}>
+        <Typography variant="h6" component="h2" gutterBottom>
+          {editDept ? "Edit Department" : "Add Department"}
+        </Typography>
+
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Department Name"
             name="name"
             value={deptData.name}
             onChange={handleChange}
-            placeholder="Department Name"
-            className="w-full p-2 border rounded text-gray-700"
+            variant="outlined"
+            margin="normal"
           />
 
-          <div className="flex items-center justify-between">
-            <label className="text-gray-700">Visible</label>
-            <input
-              type="checkbox"
-              checked={deptData.visible}
-              onChange={handleToggle}
-              className="w-5 h-5"
-            />
-          </div>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={deptData.visible}
+                onChange={handleToggle}
+                color="primary"
+              />
+            }
+            label="Visible"
+          />
 
-          <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-700"
-            >
+          <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+            <Button onClick={onClose} variant="outlined" color="secondary">
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
-            >
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
               {editDept ? "Update" : "Add"}
-            </button>
-          </div>
+            </Button>
+          </Box>
         </form>
-      </div>
-    </div>
+      </Box>
+    </Modal>
   );
 };
 
