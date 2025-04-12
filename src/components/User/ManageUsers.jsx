@@ -1,36 +1,8 @@
 import React, { useState } from "react";
+import { dummyUsers } from "../../Helpers/DummyData";
 
 const ManageUsers = () => {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Admin",
-      userType: "Admin",
-      email: "admin@hospital.com",
-      status: "active",
-    },
-    {
-      id: 4,
-      name: "user",
-      userType: "Regular",
-      email: "user@hospital.com",
-      status: "active",
-    },
-    {
-      id: 2,
-      name: "Bob Smith",
-      userType: "Regular",
-      email: "bob@hospital.com",
-      status: "suspended",
-    },
-    {
-      id: 3,
-      name: "Charlie Brown",
-      userType: "Admin",
-      email: "charlie@hospital.com",
-      status: "active",
-    },
-  ]);
+  const [users, setUsers] = useState(dummyUsers);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("");
@@ -100,7 +72,7 @@ const ManageUsers = () => {
           placeholder="Search users by name..."
           value={searchTerm}
           onChange={handleSearch}
-          className="p-2 border rounded w-1/3 text-gray-700"
+          className="px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1"
         />
 
         <button
@@ -124,7 +96,6 @@ const ManageUsers = () => {
       <table className="w-full border-collapse border text-gray-700">
         <thead>
           <tr className="bg-gray-200">
-            <th className="p-3 border">ID</th>
             <th className="p-3 border">Name</th>
             <th className="p-3 border">Email</th>
             <th className="p-3 border">User Type</th>
@@ -135,7 +106,6 @@ const ManageUsers = () => {
         <tbody>
           {filteredUsers.map((user) => (
             <tr key={user.id} className="text-gray-700">
-              <td className="p-3 border">{user.id}</td>
               <td className="p-3 border">{user.name}</td>
               <td className="p-3 border">{user.email}</td>
               <td className="p-3 border">{user.userType}</td>
