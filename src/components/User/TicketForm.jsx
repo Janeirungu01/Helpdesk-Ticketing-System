@@ -50,6 +50,7 @@ const TicketForm = ({ setTickets }) => {
       subject: formData.subject,
       category: formData.category,
       branch: formData.branch,
+      department:formData.department,
       date: timestamp,
       priority: formData.priority,
       description: formData.description,
