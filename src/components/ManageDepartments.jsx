@@ -18,7 +18,7 @@ const ManageDepartments = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDept, setEditDept] = useState(null);
-    const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const openModal = () => {
     setEditDept(null);
@@ -59,8 +59,8 @@ const ManageDepartments = () => {
   };
 
   const filteredDepartments = departments.filter((dept) =>
-        dept.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    dept.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
@@ -69,15 +69,13 @@ const ManageDepartments = () => {
       </h2>
 
       <div className="flex justify-between items-center mb-4">
-      <input
+        <input
           type="text"
           placeholder="Search departments..."
-
           className=" px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1 "
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        
 
         <button
           onClick={openModal}
@@ -96,14 +94,13 @@ const ManageDepartments = () => {
           </tr>
         </thead>
         <tbody>
-
-        {filteredDepartments.map((dept) => (
+          {filteredDepartments.map((dept) => (
             <tr key={dept.id}>
               <td className="p-3 border">{dept.name}</td>
               <td className="p-3 border">
                 {dept.visible ? "Visible" : "Private"}
               </td>
-         
+
               <td className="p-3 border space-x-2">
                 <button
                   className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-700"
@@ -136,7 +133,7 @@ const ManageDepartments = () => {
   );
 };
 
-// MUI Modal 
+// MUI Modal
 const DepartmentModal = ({ onSave, onClose, editDept }) => {
   const [deptData, setDeptData] = useState(
     editDept || { name: "", visible: true }

@@ -46,3 +46,34 @@ export const dummyTickets =[
         },
       ];
 
+      export const dummyUsers =[
+          {
+              id: 1,
+              name: "Admin",
+              userType: "Admin",
+              email: "admin@hospital.com",
+              status: "active",
+            },
+            {
+              id: 4,
+              name: "user",
+              userType: "Regular",
+              email: "user@hospital.com",
+              status: "active",
+            },
+            {
+              id: 2,
+              name: "Bob Smith",
+              userType: "Regular",
+              email: "bob@hospital.com",
+              status: "suspended",
+            },
+            {
+              id: 3,
+              name: "Charlie Brown",
+              userType: "Admin",
+              email: "charlie@hospital.com",
+              status: "active",
+            }
+          ]
+

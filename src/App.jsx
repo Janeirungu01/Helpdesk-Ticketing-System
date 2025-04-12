@@ -1,4 +1,3 @@
-
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
@@ -10,6 +9,7 @@ import TicketForm from "./components/User/TicketForm";
 import ManageUsers from "./components/User/ManageUsers";
 import Dashboard from "./components/User/Dashboard";
 import Department from "./components/ManageDepartments";
+import TicketPage from "./components/User/TicketsPage";
 
 function App() {
   const [tickets, setTickets] = useState(dummyTickets);
@@ -30,17 +30,17 @@ function App() {
         <Route
           path="/add-ticket"
           element={
-            <Layout>
+         
               <TicketForm
                 tickets={tickets}
                 loggedInUser={loggedInUser}
                 setTickets={setTickets}
               />
-            </Layout>
+        
           }
         />
 
-<Route path="/" element={<Login setUser={setUser} />} />
+        <Route path="/" element={<Login setUser={setUser} />} />
         <Route
           path="/manage-users"
           element={
@@ -48,24 +48,36 @@ function App() {
               <ManageUsers />
             </Layout>
           }
-          />
-           <Route
+        />
+        <Route
           path="/view-users"
           element={
             <Layout>
               <Dashboard />
             </Layout>
           }
-          />
+        />
 
-<Route
+        <Route
           path="/add-departments"
           element={
             <Layout>
               <Department />
             </Layout>
           }
-          />
+        />
+        <Route
+          path="/ticket-page"
+          element={
+            <TicketPage
+              tickets={tickets}
+              loggedInUser={loggedInUser}
+              setTickets={setTickets}
+            />
+          }
+        />
+
+        <Route path="/ticket-page" element={<TicketPage />} />
       </Routes>
       <Toaster />
     </Router>
