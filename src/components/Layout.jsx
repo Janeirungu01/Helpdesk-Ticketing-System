@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaBars, FaTicketAlt, FaPlus, FaSignOutAlt } from "react-icons/fa";
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard, MdBusiness } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Layout({ children}) {
@@ -68,14 +68,11 @@ export default function Layout({ children}) {
             to="/add-departments"
             className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
           >
-            <FaPlus />
+            <MdBusiness/> 
             {!isCollapsed && <span>Departments</span>}
           </Link>)}
         </nav>
 
-
-
-        {/* Logout Button */}
         <div className="p-4">
           <button onClick={handleLogout} className="flex items-center space-x-3 w-full p-2 hover:bg-red-500 rounded-lg">
             <FaSignOutAlt />
