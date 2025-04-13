@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Box,
@@ -10,11 +10,16 @@ import {
 } from "@mui/material";
 
 const ManageDepartments = () => {
-  const [departments, setDepartments] = useState([
-    { id: 1, name: "Radiology", visible: true },
-    { id: 2, name: "Cardiology", visible: false },
-    { id: 3, name: "Pediatrics", visible: true },
-  ]);
+  const [departments, setDepartments] = useState(() => {
+    const saved = localStorage.getItem("departments");
+    return saved
+      ? JSON.parse(saved)
+      : [
+          { id: 1, name: "Radiology", visible: true },
+          { id: 2, name: "Cardiology", visible: false },
+          { id: 3, name: "Pediatrics", visible: true },
+        ];
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDept, setEditDept] = useState(null);
@@ -30,13 +35,11 @@ const ManageDepartments = () => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
   const handleToggleVisibility = (id) => {
-    setDepartments(
-      departments.map((dept) =>
+    setDepartments((prev) =>
+      prev.map((dept) =>
         dept.id === id ? { ...dept, visible: !dept.visible } : dept
       )
     );
@@ -44,19 +47,23 @@ const ManageDepartments = () => {
 
   const handleSaveDepartment = (deptData) => {
     if (editDept) {
-      setDepartments(
-        departments.map((dept) =>
+      setDepartments((prev) =>
+        prev.map((dept) =>
           dept.id === editDept.id ? { ...deptData, id: editDept.id } : dept
         )
       );
     } else {
-      setDepartments([
-        ...departments,
+      setDepartments((prev) => [
+        ...prev,
         { ...deptData, id: Date.now(), visible: true },
       ]);
     }
     closeModal();
   };
+
+  useEffect(() => {
+    localStorage.setItem("departments", JSON.stringify(departments));
+  }, [departments]);
 
   const filteredDepartments = departments.filter((dept) =>
     dept.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -64,7 +71,7 @@ const ManageDepartments = () => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-gray-700">
+      <h2 className="text-2xl font-bold mb-4 text-gray-600">
         Manage Departments
       </h2>
 
@@ -72,7 +79,7 @@ const ManageDepartments = () => {
         <input
           type="text"
           placeholder="Search departments..."
-          className=" px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1 "
+          className="px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -100,7 +107,6 @@ const ManageDepartments = () => {
               <td className="p-3 border">
                 {dept.visible ? "Visible" : "Private"}
               </td>
-
               <td className="p-3 border space-x-2">
                 <button
                   className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-700"
@@ -133,7 +139,6 @@ const ManageDepartments = () => {
   );
 };
 
-// MUI Modal
 const DepartmentModal = ({ onSave, onClose, editDept }) => {
   const [deptData, setDeptData] = useState(
     editDept || { name: "", visible: true }
@@ -158,24 +163,44 @@ const DepartmentModal = ({ onSave, onClose, editDept }) => {
 
   const style = {
     position: "absolute",
-    top: "50%",
+    top: "20%",
     left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
+    transform: "translate(-50%, -20%)",
+    width: 600,
+    height: "auto",
+    maxHeight: "80vh",
+    overflowY: "auto",
     bgcolor: "background.paper",
     borderRadius: "12px",
     boxShadow: 24,
-    p: 4,
+    p: 5,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "left",
   };
 
   return (
     <Modal open onClose={onClose}>
       <Box sx={style}>
-        <Typography variant="h6" component="h2" gutterBottom>
+        <Typography
+          variant="h5"
+          component="h2"
+          gutterBottom
+          sx={{ color: "gray", fontWeight: "bold", textAlign: "center" }}
+        >
           {editDept ? "Edit Department" : "Add Department"}
         </Typography>
 
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            gap: "1rem",
+          }}
+        >
           <TextField
             fullWidth
             label="Department Name"
@@ -184,6 +209,24 @@ const DepartmentModal = ({ onSave, onClose, editDept }) => {
             onChange={handleChange}
             variant="outlined"
             margin="normal"
+            InputLabelProps={{ style: { color: "gray" } }}
+            InputProps={{ style: { color: "gray" } }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "gray",
+                },
+                "&:hover fieldset": {
+                  borderColor: "darkgray",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "gray",
+                },
+              },
+              "& label.Mui-focused": {
+                color: "gray",
+              },
+            }}
           />
 
           <FormControlLabel
@@ -195,12 +238,24 @@ const DepartmentModal = ({ onSave, onClose, editDept }) => {
               />
             }
             label="Visible"
+            sx={{ color: "gray" }}
           />
 
-          <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
-            <Button onClick={onClose} variant="outlined" color="secondary">
+          <Box display="flex" justifyContent="center" gap={2} mt={2}>
+            <Button
+              onClick={onClose}
+              variant="contained"
+              sx={{
+                backgroundColor: "#6b7280",
+                color: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#374151",
+                },
+              }}
+            >
               Cancel
             </Button>
+
             <Button type="submit" variant="contained" color="primary">
               {editDept ? "Update" : "Add"}
             </Button>
