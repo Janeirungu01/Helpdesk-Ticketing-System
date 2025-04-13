@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import { dummyUsers } from "../../Helpers/DummyData";
+import {
+  Modal,
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 
 const ManageUsers = () => {
   const [users, setUsers] = useState(dummyUsers);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,12 +82,12 @@ const ManageUsers = () => {
           placeholder="Search users by name..."
           value={searchTerm}
           onChange={handleSearch}
-          className="px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1"
+          className="px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-gray-500"
         />
 
         <button
           onClick={openModal}
-          className="px-4 py-2 bg-green-500 text-white rounded-lg"
+          className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
         >
           + Add User
         </button>
@@ -85,7 +95,7 @@ const ManageUsers = () => {
         <select
           onChange={handleFilterChange}
           value={filterType}
-          className="p-2 border rounded text-gray-700"
+          className="p-2 border rounded text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
         >
           <option value="">All Users</option>
           <option value="Admin">Admin</option>
@@ -140,21 +150,40 @@ const ManageUsers = () => {
         </tbody>
       </table>
 
-      {isModalOpen && (
-        <UserModal
-          onSave={handleSaveUser}
-          onClose={closeModal}
-          editUser={editUser}
-        />
-      )}
+      <UserModal
+        open={isModalOpen}
+        handleClose={closeModal}
+        onSave={handleSaveUser}
+        editUser={editUser}
+      />
     </div>
   );
 };
 
-const UserModal = ({ onSave, onClose, editUser }) => {
+const modalStyle = {
+  position: "absolute",
+  top: "10%",
+  left: "50%",
+  transform: "translate(-50%, 0%)",
+  width: 600,
+  bgcolor: "#f8fafc",
+  boxShadow: 24,
+  borderRadius: 2,
+  p: 4,
+  maxHeight: "80vh",
+  overflowY: "auto",
+};
+
+const UserModal = ({ open, handleClose, onSave, editUser }) => {
   const [userData, setUserData] = useState(
     editUser || { name: "", email: "", userType: "Regular", status: "active" }
   );
+
+  React.useEffect(() => {
+    setUserData(
+      editUser || { name: "", email: "", userType: "Regular", status: "active" }
+    );
+  }, [editUser]);
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -170,57 +199,67 @@ const UserModal = ({ onSave, onClose, editUser }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-blue-200 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">
+    <Modal open={open} onClose={handleClose}>
+      <Box sx={modalStyle}>
+        <Typography
+          variant="h6"
+          component="h2"
+          className="text-lg font-semibold mb-4"
+        >
           {editUser ? "Edit User" : "Add User"}
-        </h3>
+        </Typography>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
+          <TextField
+            fullWidth
+            label="Full Name"
             name="name"
             value={userData.name}
             onChange={handleChange}
-            placeholder="Full Name"
-            className="w-full p-2 border rounded text-gray-700"
+            variant="outlined"
+            sx={{ bgcolor: "#fff" }}
           />
-          <input
-            type="email"
+          <TextField
+            fullWidth
+            label="Email"
             name="email"
+            type="email"
             value={userData.email}
             onChange={handleChange}
-            placeholder="Email"
-            className="w-full p-2 border rounded text-gray-700"
+            variant="outlined"
+            sx={{ bgcolor: "#fff" }}
           />
-          <select
-            name="userType"
-            value={userData.userType}
-            onChange={handleChange}
-            className="w-full p-2 border rounded text-gray-700"
-          >
-            <option value="Admin">Admin</option>
-            <option value="Regular">Regular</option>
-          </select>
+          <FormControl fullWidth>
+            <InputLabel>User Type</InputLabel>
+            <Select
+              name="userType"
+              value={userData.userType}
+              label="User Type"
+              onChange={handleChange}
+              sx={{
+                bgcolor: "#fff",
+                borderRadius: 1,
+                "& .MuiOutlinedInput-root": {
+                  borderColor: "#d1d5db",
+                },
+              }}
+            >
+              <MenuItem value="Admin">Admin</MenuItem>
+              <MenuItem value="Regular">Regular</MenuItem>
+            </Select>
+          </FormControl>
 
-          <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-700"
-            >
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            <Button variant="outlined" color="inherit" onClick={handleClose}>
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700"
-            >
+            </Button>
+            <Button type="submit" variant="contained" color="primary">
               {editUser ? "Update" : "Add"}
-            </button>
-          </div>
+            </Button>
+          </Box>
         </form>
-      </div>
-    </div>
+      </Box>
+    </Modal>
   );
 };
 
