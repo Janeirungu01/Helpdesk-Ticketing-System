@@ -17,10 +17,17 @@ function Tickets({ tickets }) {
 
     const newTickets = tickets
       .filter((t) => !storedIds.has(t.ticketId))
+      // .map((t) => ({
+      //   ...t,
+      //   status: t.status || "Pending",
+      //   notes: t.notes || "",
+      // }));
+
       .map((t) => ({
         ...t,
         status: t.status || "Pending",
         notes: t.notes || "",
+        updatedAt: t.updatedAt || t.date || new Date().toISOString(),
       }));
 
     const merged = [...storedTickets, ...newTickets];
@@ -34,10 +41,9 @@ function Tickets({ tickets }) {
   //     status: t.status || "Pending",
   //     notes: t.notes || "",
   //   }));
-  
+
   //   setTicketList(updatedTickets);
   // }, [tickets]);
-  
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -71,7 +77,12 @@ function Tickets({ tickets }) {
   const resolveTicket = () => {
     const updatedTickets = ticketList.map((ticket) =>
       ticket.ticketId === selectedTicket.ticketId
-        ? { ...ticket, status: "Resolved", notes }
+        ? {
+            ...ticket,
+            status: "Resolved",
+            notes,
+            updatedAt: new Date().toISOString(),
+          }
         : ticket
     );
     setTicketList(updatedTickets);
@@ -92,6 +103,12 @@ function Tickets({ tickets }) {
           <td className="p-2 border">
             {new Date(ticket.date).toLocaleDateString()}
           </td>
+          <td className="p-2 border">
+            {ticket.updatedAt
+              ? new Date(ticket.updatedAt).toLocaleString()
+              : "N/A"}
+          </td>
+
           <td
             className={`p-2 border text-white font-bold text-center ${getPriorityClass(
               ticket.priority
@@ -145,6 +162,7 @@ function Tickets({ tickets }) {
               <th className="p-3 border">Branch</th>
               <th className="p-3 border">Department</th>
               <th className="p-3 border">Date</th>
+              <th className="p-3 border">Updated At</th>
               <th className="p-3 border">Priority</th>
               <th className="p-3 border">Status</th>
               <th className="p-3 border">Actions</th>
@@ -229,12 +247,46 @@ function Tickets({ tickets }) {
                 <strong>Date:</strong>{" "}
                 {new Date(selectedTicket.date).toLocaleString()}
               </p>
+
               <p>
                 <strong>Description:</strong> {selectedTicket.description}
               </p>
               <p>
                 <strong>Priority:</strong> {selectedTicket.priority}
               </p>
+              {selectedTicket.attachment && (
+                <div className="mt-4">
+                  <strong>Attachment:</strong>
+                  {typeof selectedTicket.attachment === "string" ? (
+                    selectedTicket.attachment.match(/^data:image\//) ? (
+                      <img
+                        src={selectedTicket.attachment}
+                        alt="Attachment"
+                        className="mt-2 rounded max-h-60"
+                      />
+                    ) : (
+                      <a
+                        href={selectedTicket.attachment}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block mt-2 text-blue-600 underline"
+                      >
+                        View File
+                      </a>
+                    )
+                  ) : (
+                    <a
+                      href={URL.createObjectURL(selectedTicket.attachment)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block mt-2 text-blue-600 underline"
+                    >
+                      View Attachment
+                    </a>
+                  )}
+                </div>
+              )}
+
               <p>
                 <strong>Status:</strong> {selectedTicket.status}
               </p>
