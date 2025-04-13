@@ -30,13 +30,11 @@ function App() {
         <Route
           path="/add-ticket"
           element={
-         
-              <TicketForm
-                tickets={tickets}
-                loggedInUser={loggedInUser}
-                setTickets={setTickets}
-              />
-        
+            <TicketForm
+              tickets={tickets}
+              loggedInUser={loggedInUser}
+              setTickets={setTickets}
+            />
           }
         />
 

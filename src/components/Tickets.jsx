@@ -77,7 +77,7 @@ function Tickets({ tickets }) {
   };
 
   return (
-    <div className="flex justify-center items-center px-4 md:px-8">
+    <div className="flex justify-center items-center p-2 md:px-8">
       <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md overflow-x-auto">
         <h2 className="text-2xl font-bold text-gray-700 mb-4">Tickets</h2>
 
@@ -85,6 +85,7 @@ function Tickets({ tickets }) {
           <thead>
             <tr className="bg-gray-200 text-gray-700">
               <th className="p-3 border">Ticket ID</th>
+              <th className="p-3 border">Created By</th>
               <th className="p-3 border">Subject</th>
               {/* <th className="p-3 border">Category</th> */}
               <th className="p-3 border">Branch</th>
@@ -101,6 +102,10 @@ function Tickets({ tickets }) {
             {ticketList.map((ticket) => (
               <tr key={ticket.ticketId} className="text-gray-700">
                 <td className="p-3 border">{ticket.ticketId}</td>
+                <td className="p-2 border">
+                  {ticket.createdBy?.name || ticket.createdBy || "N/A"}
+                </td>
+
                 <td className="p-2 border">{ticket.subject}</td>
                 {/* <td className="p-2 border">{ticket.category}</td> */}
                 <td className="p-2 border">{ticket.branch}</td>
@@ -210,6 +215,13 @@ function Tickets({ tickets }) {
                 <strong>ID:</strong> {selectedTicket.ticketId}
               </p>
               <p>
+                <strong>Created By:</strong>{" "}
+                {selectedTicket.createdBy?.name ||
+                  selectedTicket.createdBy ||
+                  "N/A"}
+              </p>
+
+              <p>
                 <strong>Subject:</strong> {selectedTicket.subject}
               </p>
               <p>
@@ -219,7 +231,7 @@ function Tickets({ tickets }) {
                 <strong>Branch:</strong> {selectedTicket.branch}
               </p>
               <p>
-                <strong>Branch:</strong> {selectedTicket.department}
+                <strong>Department:</strong> {selectedTicket.department}
               </p>
               <p>
                 <strong>Date:</strong>{" "}
