@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { getStatusClass, getPriorityClass } from "../Helpers/DummyData";
+import { getStatusClass, getPriorityClass, timeAgo } from "../Helpers/DummyData";
 
 function Tickets({ tickets }) {
   const loggedInUser = JSON.parse(localStorage.getItem("user"));
@@ -17,12 +17,6 @@ function Tickets({ tickets }) {
 
     const newTickets = tickets
       .filter((t) => !storedIds.has(t.ticketId))
-      // .map((t) => ({
-      //   ...t,
-      //   status: t.status || "Pending",
-      //   notes: t.notes || "",
-      // }));
-
       .map((t) => ({
         ...t,
         status: t.status || "Pending",
@@ -103,11 +97,10 @@ function Tickets({ tickets }) {
           <td className="p-2 border">
             {new Date(ticket.date).toLocaleDateString()}
           </td>
-          <td className="p-2 border">
-            {ticket.updatedAt
-              ? new Date(ticket.updatedAt).toLocaleString()
-              : "N/A"}
-          </td>
+          <td className="p-2 border text-sm italic text-gray-600">
+  {ticket.updatedAt ? timeAgo(ticket.updatedAt) : "N/A"}
+</td>
+
 
           <td
             className={`p-2 border text-white font-bold text-center ${getPriorityClass(
