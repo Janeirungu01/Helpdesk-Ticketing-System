@@ -34,10 +34,21 @@ const TicketForm = ({ setTickets }) => {
 
     if (name === "attachment") {
       const file = files[0];
-      if (file && file.type === "application/pdf") {
+      const allowedTypes = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+        "image/jpeg",
+        "image/png",
+        "image/jpg",
+      ];
+
+      if (file && allowedTypes.includes(file.type)) {
         setFormData({ ...formData, attachment: file, updatedAt: new Date() });
       } else {
-        toast.error("Only PDF files are allowed.");
+        toast.error(
+          "Invalid file type. Only PDF, Word (doc/docx), JPG, and PNG are allowed."
+        );
         e.target.value = "";
       }
     } else {
@@ -58,19 +69,6 @@ const TicketForm = ({ setTickets }) => {
 
     const timestamp = new Date().toISOString();
 
-    // const newTicket = {
-    //   ticketId: Date.now(),
-    //   subject: formData.subject,
-    //   category: formData.category,
-    //   branch: formData.branch,
-    //   department: formData.department,
-    //   date: timestamp,
-    //   priority: formData.priority,
-    //   description: formData.description,
-    //   resolved: false,
-    //   attachment: formData.attachment?.name || null,
-    // };
-
     const newTicket = {
       ticketId: Date.now(),
       subject: formData.subject,
@@ -88,7 +86,6 @@ const TicketForm = ({ setTickets }) => {
       date: timestamp,
       attachment: formData.attachment?.name || null,
     };
-    
 
     setTickets((prev) => [...prev, newTicket]);
     toast.success(`Ticket #${newTicket.ticketId} created successfully.`);
@@ -149,8 +146,6 @@ const TicketForm = ({ setTickets }) => {
             </select>
           </div>
 
-         
-
           <div>
             <label className="block font-medium capitalize text-gray-600">
               Priority <span className="text-red-500">*</span>
@@ -181,12 +176,12 @@ const TicketForm = ({ setTickets }) => {
 
           <div>
             <label className="block font-semibold text-gray-700 mb-1">
-              Attachment (PDF only)
+              Attachment (PDF, Word, Image)
             </label>
             <input
               type="file"
               name="attachment"
-              accept="application/pdf"
+              accept=".pdf,.doc,.docx,image/*"
               onChange={handleChange}
               className="w-3/4 border border-gray-300 px-4 py-2 rounded"
             />

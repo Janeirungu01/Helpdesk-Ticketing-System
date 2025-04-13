@@ -28,6 +28,17 @@ function Tickets({ tickets }) {
     localStorage.setItem("tickets", JSON.stringify(merged));
   }, [tickets]);
 
+  // useEffect(() => {
+  //   const updatedTickets = tickets.map((t) => ({
+  //     ...t,
+  //     status: t.status || "Pending",
+  //     notes: t.notes || "",
+  //   }));
+  
+  //   setTicketList(updatedTickets);
+  // }, [tickets]);
+  
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       localStorage.setItem("tickets", JSON.stringify(ticketList));
@@ -122,7 +133,7 @@ function Tickets({ tickets }) {
   );
 
   return (
-    <div className="flex justify-center items-center p-2 md:px-8">
+    <div className="flex justify-center items-center  md:px-2">
       <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md overflow-x-auto">
         <h2 className="text-2xl font-bold text-gray-700 mb-4">Tickets</h2>
         <table className="w-full border-collapse border border-gray-200 text-sm md:text-base">
