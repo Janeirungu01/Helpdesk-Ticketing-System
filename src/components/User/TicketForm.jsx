@@ -1,10 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { FaUserCircle } from "react-icons/fa"
+import { FaUserCircle } from "react-icons/fa";
+import { useEffect } from "react";
 
 const TicketForm = ({ setTickets }) => {
   const navigate = useNavigate();
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+    } else {
+      toast.error("User not logged in");
+    }
+  }, []);
+
   const [formData, setFormData] = useState({
     subject: "",
     department: "",
@@ -45,18 +58,37 @@ const TicketForm = ({ setTickets }) => {
 
     const timestamp = new Date().toISOString();
 
+    // const newTicket = {
+    //   ticketId: Date.now(),
+    //   subject: formData.subject,
+    //   category: formData.category,
+    //   branch: formData.branch,
+    //   department: formData.department,
+    //   date: timestamp,
+    //   priority: formData.priority,
+    //   description: formData.description,
+    //   resolved: false,
+    //   attachment: formData.attachment?.name || null,
+    // };
+
     const newTicket = {
       ticketId: Date.now(),
       subject: formData.subject,
       category: formData.category,
-      branch: formData.branch,
-      department:formData.department,
-      date: timestamp,
+      department: formData.department,
       priority: formData.priority,
       description: formData.description,
+      branch: user?.branch || "Unknown",
+      createdBy: {
+        name: user?.userName || "Unknown",
+        email: user?.email || "Unknown",
+        userType: user?.userType || "User",
+      },
       resolved: false,
+      date: timestamp,
       attachment: formData.attachment?.name || null,
     };
+    
 
     setTickets((prev) => [...prev, newTicket]);
     toast.success(`Ticket #${newTicket.ticketId} created successfully.`);
@@ -117,22 +149,7 @@ const TicketForm = ({ setTickets }) => {
             </select>
           </div>
 
-          {/* <div>
-            <label className="block font-semibold text-gray-700 mb-1">
-              Category
-            </label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-3/4 border border-gray-300 px-3 py-2 rounded"
-            >
-              <option value="">Select an option</option>
-              <option value="Hardware Problem">Hardware Problem</option>
-              <option value="Software Problem">Software Problem</option>
-              <option value="Account Problem">Account Problem</option>
-            </select>
-          </div> */}
+         
 
           <div>
             <label className="block font-medium capitalize text-gray-600">
