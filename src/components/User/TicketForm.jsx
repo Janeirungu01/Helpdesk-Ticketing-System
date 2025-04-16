@@ -31,20 +31,32 @@ const TicketForm = ({ setTickets }) => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
+  
     if (name === "attachment") {
       const file = files[0];
       const allowedTypes = [
         "application/pdf",
         "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "image/jpeg",
         "image/png",
         "image/jpg",
       ];
-
+  
       if (file && allowedTypes.includes(file.type)) {
-        setFormData({ ...formData, attachment: file, updatedAt: new Date() });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFormData((prevData) => ({
+            ...prevData,
+            attachment: {
+              name: file.name,
+              type: file.type,
+              data: reader.result, 
+            },
+            updatedAt: new Date(),
+          }));
+        };
+        reader.readAsDataURL(file);
       } else {
         toast.error(
           "Invalid file type. Only PDF, Word (doc/docx), JPG, and PNG are allowed."
@@ -55,7 +67,7 @@ const TicketForm = ({ setTickets }) => {
       setFormData({ ...formData, [name]: value, updatedAt: new Date() });
     }
   };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -78,6 +90,7 @@ const TicketForm = ({ setTickets }) => {
       description: formData.description,
       branch: user?.branch || "Unknown",
       createdBy: {
+        
         name: user?.userName || "Unknown",
         email: user?.email || "Unknown",
         userType: user?.userType || "User",
@@ -86,6 +99,8 @@ const TicketForm = ({ setTickets }) => {
       date: timestamp,
       attachment: formData.attachment?.name || null,
     };
+  
+    
 
     setTickets((prev) => [...prev, newTicket]);
     toast.success(`Ticket #${newTicket.ticketId} created successfully.`);
@@ -93,23 +108,12 @@ const TicketForm = ({ setTickets }) => {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 text-gray-500">
-      <header className="bg-white shadow px-12 py-2 flex justify-between items-center w-full">
-        <h1 className="text-xl font-bold text-gray-700">Bristol Desk</h1>
-        <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-          <FaUserCircle />
-        </div>
-      </header>
+    <div className="min-h-screen max-w-5xl px-3 bg-blue-50 text-gray-500">
+    
 
       <div className="max-w-5xl mx-auto bg-white p-6 mt-4 rounded shadow">
         <div className="flex justify-between items-center mb-4">
           <h4 className="text-2xl font-bold">Create Ticket</h4>
-          <button
-            onClick={() => navigate("/tickets")}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-          >
-            Return to Ticket List
-          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
@@ -190,7 +194,7 @@ const TicketForm = ({ setTickets }) => {
           <div className="pt-4">
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-green-700 text-white px-6 py-2 rounded"
+              className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded"
             >
               Create Ticket
             </button>

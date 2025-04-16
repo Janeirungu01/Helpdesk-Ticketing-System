@@ -138,7 +138,7 @@ const TicketPage = () => {
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded"
+              className="w-full sm:w-auto bg-blue-400 hover:bg-blue-700 text-white px-6 py-2 rounded"
             >
               Create Ticket
             </button>
