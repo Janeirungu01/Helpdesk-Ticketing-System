@@ -29,24 +29,16 @@ function Tickets({ tickets }) {
         updatedAt: t.updatedAt || t.date || new Date().toISOString(),
         closed: false,
       }));
-      const merged = [...storedTickets, ...newTickets]
-    // const merged = [...newTickets, ...storedTickets].sort(
-    //   (a, b) =>
-    //     new Date(b.updatedAt || b.date) - new Date(a.updatedAt || a.date)
-    // );
+
+    const merged = [...newTickets, ...storedTickets].sort(
+      (a, b) =>
+        new Date(b.updatedAt || b.date) - new Date(a.updatedAt || a.date)
+    );
     setTicketList(merged);
     localStorage.setItem("tickets", JSON.stringify(merged));
   }, [tickets]);
 
-  // useEffect(() => {
-  //   const updatedTickets = tickets.map((t) => ({
-  //     ...t,
-  //     status: t.status || "Pending",
-  //     notes: t.notes || "",
-  //   }));
 
-  //   setTicketList(updatedTickets);
-  // }, [tickets]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
