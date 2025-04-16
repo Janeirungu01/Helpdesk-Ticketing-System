@@ -85,7 +85,9 @@ export const getStatusClass = (status) => {
       return "bg-blue-400 text-white";
     case "Escalated":
       return "bg-red-500 text-white";
-    case "Waiting for User":
+      case "Pending":
+        return "bg-red-400 text-white";
+    case "Closed":
       return "bg-yellow-400 text-white";
     default:
       return "bg-gray-400 text-white";
