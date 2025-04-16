@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { getStatusClass, getPriorityClass, timeAgo } from "../Helpers/DummyData";
+import {
+  getStatusClass,
+  getPriorityClass,
+  timeAgo,
+} from "../Helpers/DummyData";
 
 function Tickets({ tickets }) {
   const loggedInUser = JSON.parse(localStorage.getItem("user"));
@@ -10,6 +14,7 @@ function Tickets({ tickets }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [notes, setNotes] = useState("");
+  const [promptOpen, setPromptOpen] = useState(false);
 
   useEffect(() => {
     const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
@@ -22,9 +27,13 @@ function Tickets({ tickets }) {
         status: t.status || "Pending",
         notes: t.notes || "",
         updatedAt: t.updatedAt || t.date || new Date().toISOString(),
+        closed: false,
       }));
-
-    const merged = [...storedTickets, ...newTickets];
+      const merged = [...storedTickets, ...newTickets]
+    // const merged = [...newTickets, ...storedTickets].sort(
+    //   (a, b) =>
+    //     new Date(b.updatedAt || b.date) - new Date(a.updatedAt || a.date)
+    // );
     setTicketList(merged);
     localStorage.setItem("tickets", JSON.stringify(merged));
   }, [tickets]);
@@ -80,72 +89,162 @@ function Tickets({ tickets }) {
         : ticket
     );
     setTicketList(updatedTickets);
+    setPromptOpen(true);
     closeModal();
+  };
+
+  const closeTicket = (ticketId) => {
+    const updatedTickets = ticketList.map((ticket) =>
+      ticket.ticketId === ticketId ? { ...ticket, closed: true } : ticket
+    );
+    setTicketList(updatedTickets);
+    setPromptOpen(false);
+  };
+
+  const reopenTicket = (ticketId) => {
+    const updatedTickets = ticketList.map((ticket) =>
+      ticket.ticketId === ticketId
+        ? {
+            ...ticket,
+            closed: false,
+            status: "Reopened",
+            updatedAt: new Date().toISOString(),
+          }
+        : ticket
+    );
+    setTicketList(updatedTickets);
+    setPromptOpen(false);
   };
 
   const ticketRows = useMemo(
     () =>
-      ticketList.map((ticket) => (
-        <tr key={ticket.ticketId} className="text-gray-700">
-          <td className="p-3 border">{ticket.ticketId}</td>
-          <td className="p-2 border">
-            {ticket.createdBy?.name || ticket.createdBy || "N/A"}
-          </td>
-          <td className="p-2 border">{ticket.subject}</td>
-          <td className="p-2 border">{ticket.branch}</td>
-          <td className="p-2 border">{ticket.department}</td>
-          <td className="p-2 border">
-            {new Date(ticket.date).toLocaleDateString()}
-          </td>
-          <td className="p-2 border text-sm italic text-gray-600">
-  {ticket.updatedAt ? timeAgo(ticket.updatedAt) : "N/A"}
-</td>
-
-
-          <td
-            className={`p-2 border text-white font-bold text-center ${getPriorityClass(
-              ticket.priority
-            )}`}
+      ticketList
+        .filter((ticket) => {
+          if (loggedInUser?.userType === "Admin") return true;
+          return !ticket.closed;
+        })
+        .map((ticket) => (
+          // <tr
+          //   key={ticket.ticketId}
+          //   className="bg-green-50 hover:bg-green-100 text-gray-700"
+          // >
+          <tr
+            key={ticket.ticketId}
+            className={`text-gray-700 ${
+              ticket.closed && loggedInUser?.userType === "Admin"
+                ? ""
+                : ticket.status === "Resolved"
+                ? "bg-yellow-100"
+                : "bg-green-50"
+            }`}
           >
-            {ticket.priority}
-          </td>
-          <td className="p-2 border text-center">
-            <span
-              className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(
-                ticket.status
+            <td className="p-3 border">{ticket.ticketId}</td>
+            <td className="p-2 border">
+              {ticket.createdBy?.name || ticket.createdBy || "N/A"}
+            </td>
+            <td className="p-2 border">{ticket.subject}</td>
+            <td className="p-2 border">{ticket.branch}</td>
+            <td className="p-2 border">{ticket.department}</td>
+            <td className="p-2 border">
+              {new Date(ticket.date).toLocaleDateString()}
+            </td>
+            <td className="p-2 border text-sm italic text-gray-600">
+              {ticket.updatedAt ? timeAgo(ticket.updatedAt) : "N/A"}
+            </td>
+            <td
+              className={`p-2 border font-bold text-white capitalize text-center ${getPriorityClass(
+                ticket.priority
               )}`}
             >
-              {ticket.status}
-            </span>
-          </td>
-          <td className="border p-2 space-x-2">
-            <button
-              onClick={() => openViewModal(ticket)}
-              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-            >
-              View
-            </button>
-            {loggedInUser?.userType === "Admin" &&
-              (ticket.status !== "Resolved" ? (
+              {ticket.priority}
+            </td>
+            <td className="p-2 border text-center">
+              <span
+                className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(
+                  ticket.closed && loggedInUser?.userType === "Admin"
+                    ? "Closed"
+                    : ticket.status
+                )}`}
+              >
+                {ticket.closed && loggedInUser?.userType === "Admin"
+                  ? "Closed"
+                  : ticket.status}
+              </span>
+            </td>
+            <td className="border p-2 space-x-2">
+              <button
+                onClick={() => openViewModal(ticket)}
+                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              >
+                View
+              </button>
+              {loggedInUser?.userType === "Admin" &&
+                ticket.status !== "Resolved" &&
+                !ticket.closed && (
+                  <button
+                    onClick={() => openModal(ticket)}
+                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                  >
+                    Resolve
+                  </button>
+                )}
+              {loggedInUser?.userType === "Regular" &&
+                ticket.status === "Resolved" &&
+                !ticket.closed && (
+                  <button
+                    onClick={() => {
+                      setSelectedTicket(ticket);
+                      setPromptOpen(true);
+                    }}
+                    className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+                  >
+                    Take Action
+                  </button>
+                )}
+              {loggedInUser?.userType === "Regular" && ticket.closed && (
                 <button
-                  className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
-                  onClick={() => openModal(ticket)}
+                  onClick={() => reopenTicket(ticket.ticketId)}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
                 >
-                  Resolve
+                  Reopen
                 </button>
-              ) : (
-                <span className="text-green-600 font-bold">Resolved</span>
-              ))}
-          </td>
-        </tr>
-      )),
+              )}
+            </td>
+          </tr>
+        )),
     [ticketList, loggedInUser?.userType]
   );
 
   return (
-    <div className="flex justify-center items-center  md:px-2">
-      <div className="w-full max-w-7xl bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+    <div className="flex justify-center items-center md:px-2">
+      <div className="w-full max-w-8xl bg-white p-6 rounded-lg shadow-md overflow-x-auto relative">
+        {loggedInUser?.userType === "Regular" &&
+          promptOpen &&
+          selectedTicket && (
+            <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded relative mb-4">
+              <p className="text-sm font-medium">
+                Your ticket, <strong>{selectedTicket.ticketId}</strong> has been
+                resolved. Take action?
+              </p>
+              <div className="mt-2 flex justify-end space-x-2">
+                <button
+                  onClick={() => closeTicket(selectedTicket.ticketId)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => reopenTicket(selectedTicket.ticketId)}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                >
+                  Reopen
+                </button>
+              </div>
+            </div>
+          )}
+
         <h2 className="text-2xl font-bold text-gray-700 mb-4">Tickets</h2>
+
         <table className="w-full border-collapse border border-gray-200 text-sm md:text-base">
           <thead>
             <tr className="bg-gray-200 text-gray-700">
@@ -163,6 +262,7 @@ function Tickets({ tickets }) {
           </thead>
           <tbody>{ticketRows}</tbody>
         </table>
+
         {loggedInUser?.userType === "Regular" && (
           <Link
             to="/add-ticket"
@@ -174,7 +274,7 @@ function Tickets({ tickets }) {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-blue-100 bg-opacity-25 flex justify-center items-center">
+        <div className="fixed inset-0 bg-blue-100 bg-opacity-25 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">
               Resolve Ticket
@@ -209,11 +309,9 @@ function Tickets({ tickets }) {
       )}
 
       {isViewModalOpen && selectedTicket && (
-        <div className="fixed inset-0 bg-blue-50 bg-opacity-30 flex justify-center text-gray-600 not-only:items-center z-50">
+        <div className="fixed inset-0 bg-blue-50 bg-opacity-30 flex justify-center items-center text-gray-600 z-50">
           <div className="bg-white w-[90%] max-w-md p-6 rounded-xl shadow-lg">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">
-              Ticket Details
-            </h2>
+            <h2 className="text-xl font-bold mb-4">Ticket Details</h2>
             <div className="space-y-2 text-sm">
               <p>
                 <strong>ID:</strong> {selectedTicket.ticketId}
@@ -240,7 +338,6 @@ function Tickets({ tickets }) {
                 <strong>Date:</strong>{" "}
                 {new Date(selectedTicket.date).toLocaleString()}
               </p>
-
               <p>
                 <strong>Description:</strong> {selectedTicket.description}
               </p>
@@ -279,7 +376,6 @@ function Tickets({ tickets }) {
                   )}
                 </div>
               )}
-
               <p>
                 <strong>Status:</strong> {selectedTicket.status}
               </p>
