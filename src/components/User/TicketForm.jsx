@@ -31,7 +31,7 @@ const TicketForm = ({ setTickets }) => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-  
+
     if (name === "attachment") {
       const file = files[0];
       const allowedTypes = [
@@ -42,7 +42,7 @@ const TicketForm = ({ setTickets }) => {
         "image/png",
         "image/jpg",
       ];
-  
+
       if (file && allowedTypes.includes(file.type)) {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -51,7 +51,7 @@ const TicketForm = ({ setTickets }) => {
             attachment: {
               name: file.name,
               type: file.type,
-              data: reader.result, 
+              data: reader.result,
             },
             updatedAt: new Date(),
           }));
@@ -67,7 +67,7 @@ const TicketForm = ({ setTickets }) => {
       setFormData({ ...formData, [name]: value, updatedAt: new Date() });
     }
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -90,7 +90,6 @@ const TicketForm = ({ setTickets }) => {
       description: formData.description,
       branch: user?.branch || "Unknown",
       createdBy: {
-        
         name: user?.userName || "Unknown",
         email: user?.email || "Unknown",
         userType: user?.userType || "User",
@@ -99,8 +98,6 @@ const TicketForm = ({ setTickets }) => {
       date: timestamp,
       attachment: formData.attachment?.name || null,
     };
-  
-    
 
     setTickets((prev) => [...prev, newTicket]);
     toast.success(`Ticket #${newTicket.ticketId} created successfully.`);
@@ -109,8 +106,6 @@ const TicketForm = ({ setTickets }) => {
 
   return (
     <div className="min-h-screen max-w-5xl px-3 bg-blue-50 text-gray-500">
-    
-
       <div className="max-w-5xl mx-auto bg-white p-6 mt-4 rounded shadow">
         <div className="flex justify-between items-center mb-4">
           <h4 className="text-2xl font-bold">Create Ticket</h4>
@@ -118,8 +113,8 @@ const TicketForm = ({ setTickets }) => {
 
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
           <div>
-            <label className="block font-semibold text-gray-700 mb-1">
-              Subject
+            <label className="block font-medium capitalize text-gray-600">
+              Subject <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -133,8 +128,8 @@ const TicketForm = ({ setTickets }) => {
           </div>
 
           <div>
-            <label className="block font-semibold text-gray-700 mb-1">
-              Department
+            <label className="block font-medium capitalize text-gray-600">
+              Department <span className="text-red-500">*</span>
             </label>
             <select
               name="department"
@@ -179,16 +174,19 @@ const TicketForm = ({ setTickets }) => {
           </div>
 
           <div>
-            <label className="block font-semibold text-gray-700 mb-1">
-              Attachment (PDF, Word, Image)
+            <label className="block font-semibold mb-1">
+              Attachment (PDF or Image)
             </label>
             <input
               type="file"
               name="attachment"
-              accept=".pdf,.doc,.docx,image/*"
+              accept=".pdf,image/*"
               onChange={handleChange}
-              className="w-3/4 border border-gray-300 px-4 py-2 rounded"
+              className="w-3/4 border border-gray-300 p-2 rounded"
             />
+            <p className="text-sm text-gray-500 mt-1">
+              Supported formats: .pdf, .jpg, .jpeg, .png
+            </p>
           </div>
 
           <div className="pt-4">
