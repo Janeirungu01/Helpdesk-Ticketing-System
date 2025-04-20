@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
+  Modal,
+  Backdrop,
+  Fade,
+  Box
+} from "@mui/material";
+
+import {
   getStatusClass,
   getPriorityClass,
   timeAgo,
@@ -17,14 +24,14 @@ function Tickets({ tickets }) {
   const [promptOpen, setPromptOpen] = useState(false);
 
   useEffect(() => {
-    const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
+   const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
     const storedIds = new Set(storedTickets.map((t) => t.ticketId));
 
     const newTickets = tickets
       .filter((t) => !storedIds.has(t.ticketId))
       .map((t) => ({
         ...t,
-        status: t.status || "Pending",
+        status: t.status || "Open",
         notes: t.notes || "",
         updatedAt: t.updatedAt || t.date || new Date().toISOString(),
         closed: false,
@@ -36,9 +43,10 @@ function Tickets({ tickets }) {
     );
     setTicketList(merged);
     localStorage.setItem("tickets", JSON.stringify(merged));
-  }, [tickets]);
+  }, [tickets]); 
 
 
+  
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -116,10 +124,6 @@ function Tickets({ tickets }) {
           return !ticket.closed;
         })
         .map((ticket) => (
-          // <tr
-          //   key={ticket.ticketId}
-          //   className="bg-green-50 hover:bg-green-100 text-gray-700"
-          // >
           <tr
             key={ticket.ticketId}
             className={`text-gray-700 ${
@@ -265,22 +269,30 @@ function Tickets({ tickets }) {
         )}
       </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-blue-100 bg-opacity-25 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+      <Modal
+        open={isModalOpen}
+        onClose={(event, reason) => {
+          if (reason !== "backdropClick") closeModal(); // ✅ Prevent outside click closing
+        }}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{ backdrop: { timeout: 500 } }}
+      >
+        <Fade in={isModalOpen}>
+          <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white w-[95%] sm:w-[90%] max-w-xl max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-lg text-gray-500">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">
               Resolve Ticket
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="mb-4">
               Are you sure you want to mark{" "}
-              <span className="font-bold">{selectedTicket.subject}</span> as
+              <span className="font-bold">{selectedTicket?.subject}</span> as
               resolved?
             </p>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add resolution notes..."
-              className="w-full p-2 border rounded mb-4 text-gray-700"
+              className="w-full p-2 border rounded mb-4 min-h-[120px]"
             />
             <div className="flex justify-end space-x-2">
               <button
@@ -296,47 +308,57 @@ function Tickets({ tickets }) {
                 Confirm
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </Box>
+        </Fade>
+      </Modal>
 
-      {isViewModalOpen && selectedTicket && (
-        <div className="fixed inset-0 bg-blue-50 bg-opacity-30 flex justify-center items-center text-gray-600 z-50">
-          <div className="bg-white w-[90%] max-w-md p-6 rounded-xl shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Ticket Details</h2>
+      <Modal
+        open={isViewModalOpen}
+        onClose={(event, reason) => {
+          if (reason !== "backdropClick") closeViewModal();
+        }}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{ backdrop: { timeout: 500 } }}
+      >
+        <Fade in={isViewModalOpen}>
+          <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-[95%] sm:w-[90%] max-w-2xl max-h-[90vh] overflow-y-auto text-gray-500">
+            <h2 className="text-xl font-bold text-gray-700 mb-4">
+              Ticket Details
+            </h2>
             <div className="space-y-2 text-sm">
               <p>
-                <strong>ID:</strong> {selectedTicket.ticketId}
+                <strong>ID:</strong> {selectedTicket?.ticketId}
               </p>
               <p>
                 <strong>Created By:</strong>{" "}
-                {selectedTicket.createdBy?.name ||
-                  selectedTicket.createdBy ||
+                {selectedTicket?.createdBy?.name ||
+                  selectedTicket?.createdBy ||
                   "N/A"}
               </p>
               <p>
-                <strong>Subject:</strong> {selectedTicket.subject}
+                <strong>Subject:</strong> {selectedTicket?.subject}
               </p>
               <p>
-                <strong>Category:</strong> {selectedTicket.category}
+                <strong>Category:</strong> {selectedTicket?.category}
               </p>
               <p>
-                <strong>Branch:</strong> {selectedTicket.branch}
+                <strong>Branch:</strong> {selectedTicket?.branch}
               </p>
               <p>
-                <strong>Department:</strong> {selectedTicket.department}
+                <strong>Department:</strong> {selectedTicket?.department}
               </p>
               <p>
                 <strong>Date:</strong>{" "}
-                {new Date(selectedTicket.date).toLocaleString()}
+                {new Date(selectedTicket?.date).toLocaleString()}
               </p>
               <p>
-                <strong>Description:</strong> {selectedTicket.description}
+                <strong>Description:</strong> {selectedTicket?.description}
               </p>
               <p>
-                <strong>Priority:</strong> {selectedTicket.priority}
+                <strong>Priority:</strong> {selectedTicket?.priority}
               </p>
-              {selectedTicket.attachment && (
+              {selectedTicket?.attachment && (
                 <div className="mt-4">
                   <strong>Attachment:</strong>
                   {typeof selectedTicket.attachment === "string" ? (
@@ -369,10 +391,10 @@ function Tickets({ tickets }) {
                 </div>
               )}
               <p>
-                <strong>Status:</strong> {selectedTicket.status}
+                <strong>Status:</strong> {selectedTicket?.status}
               </p>
               <p>
-                <strong>Notes:</strong> {selectedTicket.notes || "-"}
+                <strong>Notes:</strong> {selectedTicket?.notes || "-"}
               </p>
             </div>
             <div className="mt-6 flex justify-end">
@@ -383,9 +405,9 @@ function Tickets({ tickets }) {
                 Close
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </Box>
+        </Fade>
+      </Modal>
     </div>
   );
 }
