@@ -20,11 +20,39 @@ A simple and responsive ticketing system built with **React** and **Tailwind CSS
 - Node.js (v14+)
 - npm or yarn
 
-🧠 Technologies Used
-React
+
+
+🧠 Tech Stack
+Frontend
+React 
 
 Tailwind CSS
 
 React Router
+
+Axios (for API requests)
+
+Backend
+Ruby on Rails (API mode)
+
+PostgreSQL (database)
+
+Jbuilder or ActiveModel::Serializers (for JSON responses)
+
+
+🚀 Getting Started
+Prerequisites
+Node.js (v14+)
+
+npm or yarn
+
+Ruby (v3.3+)
+
+Rails (v8+)
+
+PostgreSQL
+
+
+
 
 
