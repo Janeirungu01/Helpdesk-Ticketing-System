@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { dummyUsers } from "../../Helpers/DummyData";
 import {
   Modal,
@@ -8,9 +8,21 @@ import {
   Button,
   Select,
   MenuItem,
-  InputLabel,
   FormControl,
 } from "@mui/material";
+
+const defaultUserData = {
+  name: "",
+  email: "",
+  username: "",
+  password: "",
+  confirmPassword: "",
+  userType: "Regular",
+  status: "active",
+  branches: [],
+};
+
+const branchesList = ["FEDHA", "TASSIA", "UTAWALA", "KITENGELA", "MACHAKOS"];
 
 const ManageUsers = () => {
   const [users, setUsers] = useState(dummyUsers);
@@ -31,19 +43,12 @@ const ManageUsers = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleFilterChange = (e) => {
-    setFilterType(e.target.value);
+    setEditUser(null); // Reset edit state on close
   };
 
   const handleToggleStatus = (id) => {
-    setUsers(
-      users.map((user) =>
+    setUsers((prev) =>
+      prev.map((user) =>
         user.id === id
           ? {
               ...user,
@@ -56,33 +61,35 @@ const ManageUsers = () => {
 
   const handleSaveUser = (userData) => {
     if (editUser) {
-      setUsers(
-        users.map((user) => (user.id === editUser.id ? userData : user))
+      setUsers((prev) =>
+        prev.map((user) => (user.id === editUser.id ? userData : user))
       );
     } else {
-      setUsers([...users, { ...userData, id: Date.now(), status: "active" }]);
+      setUsers((prev) => [
+        ...prev,
+        { ...userData, id: Date.now(), status: "active" },
+      ]);
     }
     closeModal();
   };
 
-  const filteredUsers = users.filter((user) => {
-    return (
+  const filteredUsers = users.filter(
+    (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filterType ? user.userType === filterType : true)
-    );
-  });
+  );
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-4 text-gray-700">Manage Users</h2>
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 gap-2 flex-wrap">
         <input
           type="text"
           placeholder="Search users by name..."
           value={searchTerm}
-          onChange={handleSearch}
-          className="px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="px-4 py-2 border rounded-md w-full sm:w-1/3 focus:ring-2 focus:ring-gray-500"
         />
 
         <button
@@ -93,9 +100,9 @@ const ManageUsers = () => {
         </button>
 
         <select
-          onChange={handleFilterChange}
+          onChange={(e) => setFilterType(e.target.value)}
           value={filterType}
-          className="p-2 border rounded text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          className="p-2 border rounded text-gray-700 focus:ring-2 focus:ring-gray-500"
         >
           <option value="">All Users</option>
           <option value="Admin">Admin</option>
@@ -106,11 +113,13 @@ const ManageUsers = () => {
       <table className="w-full border-collapse border text-gray-700">
         <thead>
           <tr className="bg-gray-200">
-            <th className="p-3 border">Name</th>
-            <th className="p-3 border">Email</th>
-            <th className="p-3 border">User Type</th>
-            <th className="p-3 border">Status</th>
-            <th className="p-3 border">Actions</th>
+            {["Name", "Email", "User Type", "Status", "Actions"].map(
+              (header) => (
+                <th key={header} className="p-3 border">
+                  {header}
+                </th>
+              )
+            )}
           </tr>
         </thead>
         <tbody>
@@ -175,85 +184,163 @@ const modalStyle = {
 };
 
 const UserModal = ({ open, handleClose, onSave, editUser }) => {
-  const [userData, setUserData] = useState(
-    editUser || { name: "", email: "", userType: "Regular", status: "active" }
-  );
+  const [userData, setUserData] = useState(defaultUserData);
 
-  React.useEffect(() => {
-    setUserData(
-      editUser || { name: "", email: "", userType: "Regular", status: "active" }
-    );
+  useEffect(() => {
+    setUserData(editUser || defaultUserData);
   }, [editUser]);
 
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleBranchToggle = (branch) => {
+    setUserData((prev) => ({
+      ...prev,
+      branches: prev.branches.includes(branch)
+        ? prev.branches.filter((b) => b !== branch)
+        : [...prev.branches, branch],
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!userData.name || !userData.email) {
-      alert("Please fill all fields!");
+    const { name, username, password, confirmPassword, branches } = userData;
+
+    if (
+      !name ||
+      !username ||
+      !password ||
+      !confirmPassword ||
+      branches.length === 0
+    ) {
+      alert("Please fill all required fields!");
       return;
     }
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
     onSave(userData);
   };
 
+  const handleCancel = () => {
+    setUserData(defaultUserData);
+    handleClose();
+  };
+
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleCancel}>
       <Box sx={modalStyle}>
         <Typography
           variant="h6"
-          component="h2"
-          className="text-lg font-semibold mb-4"
+          className="text-sm font-semibold mb-4 text-gray-700"
         >
           {editUser ? "Edit User" : "Add User"}
         </Typography>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <TextField
-            fullWidth
-            label="Full Name"
-            name="name"
-            value={userData.name}
-            onChange={handleChange}
-            variant="outlined"
-            sx={{ bgcolor: "#fff" }}
-          />
-          <TextField
-            fullWidth
-            label="Email"
-            name="email"
-            type="email"
-            value={userData.email}
-            onChange={handleChange}
-            variant="outlined"
-            sx={{ bgcolor: "#fff" }}
-          />
-          <FormControl fullWidth>
-            <InputLabel>User Type</InputLabel>
-            <Select
-              name="userType"
-              value={userData.userType}
-              label="User Type"
-              onChange={handleChange}
-              sx={{
-                bgcolor: "#fff",
-                borderRadius: 1,
-                "& .MuiOutlinedInput-root": {
-                  borderColor: "#d1d5db",
-                },
-              }}
-            >
-              <MenuItem value="Admin">Admin</MenuItem>
-              <MenuItem value="Regular">Regular</MenuItem>
-            </Select>
-          </FormControl>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-3 text-gray-600 text-sm"
+        >
+          {[
+            { label: "Full Name", name: "name", type: "text", required: true },
+            { label: "Email", name: "email", type: "email", required: false },
+            {
+              label: "Username",
+              name: "username",
+              type: "text",
+              required: true,
+            },
+            {
+              label: "Password",
+              name: "password",
+              type: "password",
+              required: true,
+            },
+            {
+              label: "Confirm Password",
+              name: "confirmPassword",
+              type: "password",
+              required: true,
+            },
+          ].map(({ label, name, type, required }) => (
+            <Box key={name} display="flex" alignItems="center" gap={2}>
+              <Box width="35%">
+                <span className="text-xs text-gray-600">
+                  {label}
+                  {required && <span className="text-red-500"> *</span>}
+                </span>
+              </Box>
+              <TextField
+                fullWidth
+                name={name}
+                type={type}
+                value={userData[name]}
+                onChange={handleChange}
+                variant="outlined"
+                size="small"
+                inputProps={{ style: { fontSize: "0.8rem" } }}
+              />
+            </Box>
+          ))}
 
-          <Box display="flex" justifyContent="flex-end" gap={2}>
-            <Button variant="outlined" color="inherit" onClick={handleClose}>
+          <Box display="flex" alignItems="center" gap={2}>
+            <Box width="35%">
+              <span className="text-xs text-gray-600">
+                User Type <span className="text-red-500">*</span>
+              </span>
+            </Box>
+            <FormControl fullWidth size="small">
+              <Select
+                name="userType"
+                value={userData.userType}
+                onChange={handleChange}
+              >
+                <MenuItem value="Regular">Regular</MenuItem>
+                <MenuItem value="Admin">Admin</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box display="flex" alignItems="center" gap={2}>
+            <Box width="35%">
+              <span className="text-xs text-gray-600">
+                Branches <span className="text-red-500">*</span>
+              </span>
+            </Box>
+            <Box display="flex" gap={2} flexWrap="wrap">
+              {branchesList.map((branch) => (
+                <label key={branch} className="flex items-center text-xs gap-1">
+                  <input
+                    type="checkbox"
+                    checked={userData.branches.includes(branch)}
+                    onChange={() => handleBranchToggle(branch)}
+                  />
+                  {branch}
+                </label>
+              ))}
+            </Box>
+          </Box>
+
+          <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              size="small"
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="small"
+            >
               {editUser ? "Update" : "Add"}
             </Button>
           </Box>

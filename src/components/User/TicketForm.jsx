@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { FaUserCircle } from "react-icons/fa";
 import { useEffect } from "react";
 
-const TicketForm = ({ setTickets }) => {
+const TicketForm = ({  setTickets }) => {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -100,6 +100,7 @@ const TicketForm = ({ setTickets }) => {
     };
 
     setTickets((prev) => [...prev, newTicket]);
+ 
     toast.success(`Ticket #${newTicket.ticketId} created successfully.`);
     navigate("/tickets");
   };
