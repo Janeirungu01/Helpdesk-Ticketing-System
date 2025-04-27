@@ -6,7 +6,7 @@ import Login from "./components/Login";
 import Tickets from "./components/Tickets";
 import Layout from "./components/Layout";
 import TicketForm from "./components/User/TicketForm";
-import ManageUsers from "./components/User/ManageUsers";
+import ManageUsers from "./components/ManageUsers/ManageUsers";
 import Dashboard from "./components/User/Dashboard";
 import Department from "./components/ManageDepartments";
 import TicketPage from "./components/User/TicketsPage";
