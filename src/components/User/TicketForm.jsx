@@ -106,37 +106,44 @@ const TicketForm = ({  setTickets }) => {
   };
 
   return (
-    <div className="min-h-screen max-w-5xl px-3 bg-blue-50 text-gray-500">
-      <div className="max-w-5xl mx-auto bg-white p-6 mt-4 rounded shadow">
-        <div className="flex justify-between items-center mb-4">
-          <h4 className="text-2xl font-bold">Create Ticket</h4>
-        </div>
+    // <div className="min-h-screen max-w-6xl px-3  text-gray-500">
+       <div className="p-4 max-w-6xl mx-auto text-gray-600">
+
+      {/* <div className="max-w-5xl mx-auto p-6 mt-4 rounded shadow"> */}
+        {/* <div className="flex justify-center items-center mb-4">
+          <h4 className=" text-3xl font-bold mb-6 text-center">Create Ticket</h4>
+        </div> */}
+        <h1 className="text-3xl font-bold mb-6 text-center mr-[25%]" >Create Ticket</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
           <div>
-            <label className="block font-medium capitalize text-gray-600">
+            <label className="block text-lg font-semibold capitalize text-gray-600 ">
+
               Subject <span className="text-red-500">*</span>
-            </label>
+              </label>
+            
             <input
               type="text"
               name="subject"
               value={formData.subject}
               onChange={handleChange}
-              className="w-3/4 border border-gray-300 px-3 py-2 rounded focus:outline-none focus:border-gray-700"
+              // className="w-3/4 border border-gray-300 px-3 py-2 rounded focus:outline-none focus:border-gray-700"
+              className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Subject"
               required
             />
           </div>
 
           <div>
-            <label className="block font-medium capitalize text-gray-600">
+            <label className="block font-semibold capitalize text-gray-600">
               Department <span className="text-red-500">*</span>
             </label>
             <select
               name="department"
               value={formData.department}
               onChange={handleChange}
-              className="w-3/4 border border-gray-300 px-3 py-2 rounded"
+              // className="w-3/4 border border-gray-300 px-3 py-2 mt-1 rounded"
+              className="w-3/4 p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               required
             >
               <option value="">Select an option</option>
@@ -147,14 +154,15 @@ const TicketForm = ({  setTickets }) => {
           </div>
 
           <div>
-            <label className="block font-medium capitalize text-gray-600">
+            <label className="block font-semibold capitalize text-gray-600">
               Priority <span className="text-red-500">*</span>
             </label>
             <select
               name="priority"
               value={formData.priority}
               onChange={handleChange}
-              className="w-3/4 border bg-white border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
+              // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
+              className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="High">High</option>
               <option value="Medium">Medium</option>
@@ -163,14 +171,15 @@ const TicketForm = ({  setTickets }) => {
           </div>
 
           <div>
-            <label className="block font-medium capitalize text-gray-600">
+            <label className="block font-semibold capitalize text-gray-600">
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
+              // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
+              className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -183,24 +192,25 @@ const TicketForm = ({  setTickets }) => {
               name="attachment"
               accept=".pdf,image/*"
               onChange={handleChange}
-              className="w-3/4 border border-gray-300 p-2 rounded"
+              // className="w-3/4 border border-gray-300 p-2 rounded"
+              className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             <p className="text-sm text-gray-500 mt-1">
               Supported formats: .pdf, .jpg, .jpeg, .png
             </p>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 flex justify-end">
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white px-6 py-2 rounded"
+              className="bg-blue-500 font-semibold hover:bg-blue-700 text-white px-6 py-2 rounded mr-[25%]"
             >
               Create Ticket
             </button>
           </div>
         </form>
       </div>
-    </div>
+    // </div>
   );
 };
 
