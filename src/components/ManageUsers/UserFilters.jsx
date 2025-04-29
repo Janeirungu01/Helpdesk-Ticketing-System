@@ -30,7 +30,7 @@ const UserFilters = ({
         <option value="">All Users</option>
         <option value="Admin">Admin</option>
         <option value="Agent">Agent</option>
-        <option value="client">Client</option>
+        <option value="Client">Client</option>
       </select>
     </div>
   );
