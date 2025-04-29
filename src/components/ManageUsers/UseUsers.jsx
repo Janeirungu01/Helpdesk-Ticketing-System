@@ -10,19 +10,21 @@ const useUsers = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://127.0.0.1:3000/users/get_users', {
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
+        const response = await axios.get(
+          "http://127.0.0.1:3000/users/get_users",
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
         setUsers(response.data);
       } catch (err) {
-        setError(err.message || 'Failed to fetch users');
+        setError(err.message || "Failed to fetch users");
       } finally {
         setLoading(false);
       }
@@ -30,14 +32,11 @@ const useUsers = () => {
 
     fetchUsers();
   }, []);
-  
 
   const openModal = () => {
     setEditUser(null);
     setIsModalOpen(true);
   };
-
-
 
   const openEditModal = (user) => {
     setEditUser(user);
@@ -62,64 +61,64 @@ const useUsers = () => {
     );
   };
 
-  // const handleSaveUser = (userData) => {
-  //   if (editUser) {
-  //     setUsers((prev) =>
-  //       prev.map((user) => (user.id === editUser.id ? userData : user))
-  //     );
-  //   } else {
-  //     setUsers((prev) => [
-  //       ...prev,
-  //       { ...userData, id: Date.now(), status: "active" },
-  //     ]);
-  //   }
-  //   closeModal();
-  // };
+  const handleResetPassword = (user) => {
+    const confirmReset = window.confirm(
+      `Are you sure you want to reset password for ${user.fullname}?`
+    );
+    if (confirmReset) {
+      console.log(`Password reset initiated for user: ${user.username}`);
+      // axios.post(`http://127.0.0.1:3000/users/reset-password/${user.id}`)
+    }
+  };
 
   const handleSaveUser = async (userData) => {
     try {
       const payload = {
-        user : {
-        fullname: userData.fullname,
-        email: userData.email,
-        username: userData.username,
-        password: userData.password,
-        password_confirmation: userData.password_confirmation,
-        usertype: userData.usertype,
-        branches: userData.branches,
-      }
+        user: {
+          fullname: userData.fullname,
+          email: userData.email,
+          username: userData.username,
+          password: userData.password,
+          password_confirmation: userData.password_confirmation,
+          usertype: userData.usertype,
+          branches: userData.branches,
+          status: "Active",
+        },
       };
-  
-      const res = await axios.post('http://127.0.0.1:3000/users', payload, {
+
+      const res = await axios.post("http://127.0.0.1:3000/users", payload, {
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       });
-  
+
       alert(`Registration successful.`);
       console.log(res.data);
-  
+
       setUsers((prev) => [
         ...prev,
-        { ...res.data, id: res.data.id || Date.now(), status: "active" },
+        {
+          ...res.data,
+          id: res.data.id || Date.now(),
+          status: res.data.status || "active",
+        },
       ]);
-  
+
       closeModal();
     } catch (error) {
       console.error(error);
       alert(
-        'Registration failed: ' +
-          (error.response?.data?.error?.join(', ') || 'Server error')
+        "Registration failed: " +
+          (error.response?.data?.error?.join(", ") || "Server error")
       );
     }
   };
-  
 
   const filteredUsers = users.filter(
     (user) =>
       user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterType ? user.userType === filterType : true)
+      (filterType ? user.usertype === filterType : true)
   );
 
   return {
@@ -134,6 +133,7 @@ const useUsers = () => {
     openEditModal,
     closeModal,
     handleToggleStatus,
+    handleResetPassword,
     handleSaveUser,
     isModalOpen,
     editUser,

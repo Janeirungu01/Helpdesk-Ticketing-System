@@ -399,6 +399,7 @@ const ManageUsers = () => {
     openEditModal,
     closeModal,
     handleToggleStatus,
+    handleResetPassword,
     handleSaveUser,
     isModalOpen,
     editUser,
@@ -416,11 +417,15 @@ const ManageUsers = () => {
         openModal={openModal}
       />
 
-      <UserTable
-        users={users}
-        handleToggleStatus={handleToggleStatus}
-        openEditModal={openEditModal}
-      />
+     
+
+<UserTable
+  users={users}
+  handleToggleStatus={handleToggleStatus}
+  openEditModal={openEditModal}
+  handleResetPassword={handleResetPassword}
+/>
+
 
       <UserModal
         open={isModalOpen}
