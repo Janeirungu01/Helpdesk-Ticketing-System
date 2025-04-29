@@ -7,6 +7,8 @@ import {
   FaSignOutAlt,
   FaBell,
 } from "react-icons/fa";
+import { FiBookOpen } from "react-icons/fi";
+
 import { MdDashboard, MdBusiness } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -23,7 +25,6 @@ export default function Layout({ children }) {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
       <aside
         className={`fixed z-50 inset-y-0 left-0 transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -53,7 +54,17 @@ export default function Layout({ children }) {
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
             >
               <FaPlus />
-              <span>Add Ticket</span>
+              <span>Create Ticket</span>
+            </Link>
+          )}
+
+          {user?.userType === "Regular" && (
+            <Link
+              to="/faqs"
+              className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
+            >
+              <FiBookOpen />
+              <span>Knowledge Base</span>
             </Link>
           )}
 
@@ -95,10 +106,8 @@ export default function Layout({ children }) {
         </div>
       </aside>
 
-      {/* Main Content */}
       <div className="flex flex-col flex-1 h-screen overflow-hidden">
         <header className="bg-white shadow-md p-4 flex items-center justify-between md:justify-end gap-4">
-          {/* Hamburger Menu on Mobile */}
           <button
             className="md:hidden text-2xl text-gray-700"
             onClick={toggleSidebar}
@@ -106,16 +115,16 @@ export default function Layout({ children }) {
             <FaBars />
           </button>
 
-          {/* Notification Bell */}
-          <div className="relative cursor-pointer" onClick={() => setHasNotification(false)}>
-  <FaBell className="text-xl text-gray-600" />
-  {hasNotification && (
-    <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
-  )}
-</div>
+          <div
+            className="relative cursor-pointer"
+            onClick={() => setHasNotification(false)}
+          >
+            <FaBell className="text-xl text-gray-600" />
+            {hasNotification && (
+              <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+            )}
+          </div>
 
-
-          {/* User Avatar */}
           <div className="relative">
             <button onClick={toggleDropdown} className="focus:outline-none">
               <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-sm font-semibold">
@@ -123,7 +132,6 @@ export default function Layout({ children }) {
               </div>
             </button>
 
-            
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                 <div className="px-4 py-3 border-b border-gray-100">
