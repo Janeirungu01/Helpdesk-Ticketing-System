@@ -47,23 +47,38 @@ const ManageDepartments = () => {
 
   const handleSaveDepartment = (deptData) => {
     if (editDept) {
-      setDepartments((prev) =>
-        prev.map((dept) =>
-          dept.id === editDept.id ? { ...deptData, id: editDept.id } : dept
-        )
-      );
+      fetch(`http://127.0.0.1:3000/departments/${editDept.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ department: deptData }),
+      })
+      .then(res => res.json())
+      .then((updated) => {
+        setDepartments((prev) => prev.map((d) => d.id === updated.id ? updated : d));
+        closeModal();
+      });
     } else {
-      setDepartments((prev) => [
-        ...prev,
-        { ...deptData, id: Date.now(), visible: true },
-      ]);
+      fetch("http://127.0.0.1:3000/departments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ department: deptData }),
+      })
+      .then(res => res.json())
+      .then((newDept) => {
+        setDepartments((prev) => [...prev, newDept]);
+        closeModal();
+      });
     }
-    closeModal();
   };
+  
 
   useEffect(() => {
-    localStorage.setItem("departments", JSON.stringify(departments));
-  }, [departments]);
+    fetch("http://127.0.0.1:3000/departments")
+      .then((res) => res.json())
+      .then((data) => setDepartments(data))
+      .catch((err) => console.error(err));
+  }, []);
+  
 
   const filteredDepartments = departments.filter((dept) =>
     dept.name.toLowerCase().includes(searchQuery.toLowerCase())

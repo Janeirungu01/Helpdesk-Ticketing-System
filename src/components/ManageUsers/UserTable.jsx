@@ -1,15 +1,22 @@
 import React from "react";
 
-const UserTable = ({ users, handleToggleStatus, openEditModal }) => {
+const UserTable = ({
+  users,
+  handleToggleStatus,
+  openEditModal,
+  handleResetPassword,
+}) => {
   return (
     <table className="w-full border-collapse border text-gray-700">
       <thead>
         <tr className="bg-gray-200">
-          {["Name", "Email","User Name", "User Type", "Status", "Actions"].map((header) => (
-            <th key={header} className="p-3 border">
-              {header}
-            </th>
-          ))}
+          {["Name", "Email", "User Name", "User Type", "Status", "Actions"].map(
+            (header) => (
+              <th key={header} className="p-3 border">
+                {header}
+              </th>
+            )
+          )}
         </tr>
       </thead>
       <tbody>
@@ -32,6 +39,7 @@ const UserTable = ({ users, handleToggleStatus, openEditModal }) => {
               >
                 Edit
               </button>
+
               <button
                 className={`px-3 py-1 rounded text-white ${
                   user.status === "active"
@@ -40,7 +48,14 @@ const UserTable = ({ users, handleToggleStatus, openEditModal }) => {
                 }`}
                 onClick={() => handleToggleStatus(user.id)}
               >
-                {user.status === "active" ? "Suspend" : "Unsuspend"}
+                {user.status === "Active" ? "Suspend" : "Unsuspend"}
+              </button>
+
+              <button
+                className="px-3 py-1 rounded bg-yellow-500 hover:bg-yellow-700 text-white"
+                onClick={() => handleResetPassword(user)}
+              >
+                Reset Password
               </button>
             </td>
           </tr>
@@ -51,4 +66,3 @@ const UserTable = ({ users, handleToggleStatus, openEditModal }) => {
 };
 
 export default UserTable;
-
