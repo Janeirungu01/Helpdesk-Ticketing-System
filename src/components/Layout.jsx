@@ -48,7 +48,7 @@ export default function Layout({ children }) {
             <FaTicketAlt />
             <span>Tickets</span>
           </Link>
-          {user?.userType === "Regular" && (
+          {user?.role === "Regular" && (
             <Link
               to="/add-ticket"
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
@@ -58,7 +58,7 @@ export default function Layout({ children }) {
             </Link>
           )}
 
-          {user?.userType === "Regular" && (
+          {user?.role === "Regular" && (
             <Link
               to="/faqs"
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
@@ -68,7 +68,7 @@ export default function Layout({ children }) {
             </Link>
           )}
 
-          {user?.userType === "Admin" && (
+          {user?.role === "Admin" && (
             <>
               <Link
                 to="/view-users"
