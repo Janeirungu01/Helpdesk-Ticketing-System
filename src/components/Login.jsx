@@ -7,32 +7,32 @@ function Login({ setUser }) {
   const navigate = useNavigate();
 
   const adminUser = {
-    userType: "Admin",
-    userName: "Admin",
-    email: "admin@hospital.com",
+    role: "Admin",
+    username: "Admin",
     password: "Admin",
   };
 
   const regularUser = {
-    userType: "Regular",
-    userName: "User",
-    email: "user@hospital.com",
+    role: "Regular",
+    username: "User",
     password: "User",
   };
 
+  const branchlist = ["FEDHA", "TASSIA", "UTAWALA", "MACHAKOS", "KITENGELA"];
+
   const [logginData, setLoggedInUser] = useState({
-    email: "",
+    username: "",
     password: "",
     branch: "",
     rememberMe: false,
   });
 
   useEffect(() => {
-    const storedEmail = localStorage.getItem("rememberedEmail");
-    if (storedEmail) {
+    const storedUsername = localStorage.getItem("rememberedUsername");
+    if (storedUsername) {
       setLoggedInUser((prev) => ({
         ...prev,
-        email: storedEmail,
+        username: storedUsername,
         rememberMe: true,
       }));
     }
@@ -49,36 +49,84 @@ function Login({ setUser }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { email, password, branch, rememberMe } = logginData;
+    const { username, password, branch, rememberMe } = logginData;
 
-    if (!email || !password || !branch) {
+    if (!username || !password || !branch) {
       toast.error("Please fill in all fields including branch");
       return;
     }
 
-    if (email === adminUser.email && password === adminUser.password) {
+    if (username === adminUser.username && password === adminUser.password) {
       setUser({ ...adminUser, branch });
       localStorage.setItem("user", JSON.stringify({ ...adminUser, branch }));
       toast.success("Login successful!");
       rememberMe
-        ? localStorage.setItem("rememberedEmail", email)
-        : localStorage.removeItem("rememberedEmail");
+        ? localStorage.setItem("rememberedUsername", username)
+        : localStorage.removeItem("rememberedUsername");
       navigate("/tickets");
     } else if (
-      email === regularUser.email &&
+      username === regularUser.username &&
       password === regularUser.password
     ) {
       setUser({ ...regularUser, branch });
       localStorage.setItem("user", JSON.stringify({ ...regularUser, branch }));
       toast.success("Login successful!");
       rememberMe
-        ? localStorage.setItem("rememberedEmail", email)
-        : localStorage.removeItem("rememberedEmail");
+        ? localStorage.setItem("rememberedUsername", username)
+        : localStorage.removeItem("rememberedUsername");
       navigate("/tickets");
     } else {
       toast.error("Invalid credentials!");
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const { username, password, branch, rememberMe } = logginData;
+
+  //   if (!username || !password || !branch) {
+  //     toast.error("Please fill in all fields including branch");
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch("http://127.0.0.1:3000/users/sign_in", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         user: { username, password, branch },
+  //       }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       const { token, user } = data;
+
+  //       setUser(user);
+  //       localStorage.setItem("user", JSON.stringify(user));
+  //       localStorage.setItem("token", token);
+
+  //       if (rememberMe) {
+  //         localStorage.setItem("rememberedUsername", username);
+  //       } else {
+  //         localStorage.removeItem("rememberedUsername");
+  //       }
+
+  //       toast.success("Login successful!");
+  //       navigate("/tickets");
+  //     } else {
+  //       toast.error(data.error || "Invalid credentials!");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Login failed. Please try again.");
+  //     console.error("Login error:", error);
+  //   }
+  // };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-50 px-4">
@@ -93,13 +141,15 @@ function Login({ setUser }) {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-600 text-sm mb-2">Email</label>
+            <label className="block text-gray-600 text-sm mb-2">
+              User Name
+            </label>
             <input
-              type="email"
-              name="email"
-              value={logginData.email}
+              type="text"
+              name="username"
+              value={logginData.username}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               className="w-full px-4 py-2 border rounded-lg focus:ring text-gray-700 bg-white"
             />
           </div>
@@ -127,11 +177,11 @@ function Login({ setUser }) {
               className="w-full px-4 py-2 border rounded-lg bg-white text-gray-700"
             >
               <option value="">-- Choose branch --</option>
-              <option value="FEDHA">FEDHA</option>
-              <option value="TASSIA">TASSIA</option>
-              <option value="UTAWALA">UTAWALA</option>
-              <option value="MACHAKOS">MACHAKOS</option>
-              <option value="KITENGELA">KITENGELA</option>
+              {branchlist.map((branch, idx) => (
+                <option key={idx} value={branch}>
+                  {branch}
+                </option>
+              ))}
             </select>
           </div>
 
