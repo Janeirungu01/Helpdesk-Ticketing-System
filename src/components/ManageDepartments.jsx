@@ -1,26 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Switch,
-  FormControlLabel,
-} from "@mui/material";
+import {Modal, Box, Typography, TextField, Button, Switch, FormControlLabel,} from "@mui/material";
 
 const ManageDepartments = () => {
-  const [departments, setDepartments] = useState(() => {
-    const saved = localStorage.getItem("departments");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          { id: 1, name: "Radiology", visible: true },
-          { id: 2, name: "Cardiology", visible: false },
-          { id: 3, name: "Pediatrics", visible: true },
-        ];
-  });
-
+  const [departments, setDepartments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDept, setEditDept] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -282,3 +264,4 @@ const DepartmentModal = ({ onSave, onClose, editDept }) => {
 };
 
 export default ManageDepartments;
+
