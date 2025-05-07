@@ -8,20 +8,45 @@ import {
   FaBell,
 } from "react-icons/fa";
 import { FiBookOpen } from "react-icons/fi";
+import axios from "axios";
 
 import { MdDashboard, MdBusiness } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 export default function Layout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hasNotification, setHasNotification] = useState(true);
   const user = JSON.parse(localStorage.getItem("user"));
+  const { token, setUser, setToken } = useAuth();
   const navigate = useNavigate();
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const handleLogout = () => navigate("/");
+
+  const handleLogout = async () => {
+    try {
+      await axios.delete("http://127.0.0.1:3000/users/sign_out", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.warn("Logout request failed, continuing anyway");
+    } finally {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      setUser(null);
+      setToken("");
+      navigate("/");
+      toast.success("Logout successful");
+    }
+  };
+  
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -48,7 +73,7 @@ export default function Layout({ children }) {
             <FaTicketAlt />
             <span>Tickets</span>
           </Link>
-          {user?.role === "Regular" && (
+          {user?.usertype === "Regular" && (
             <Link
               to="/add-ticket"
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
@@ -58,7 +83,7 @@ export default function Layout({ children }) {
             </Link>
           )}
 
-          {user?.role === "Regular" && (
+          {user?.usertype === "Agent" && (
             <Link
               to="/faqs"
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
@@ -68,7 +93,7 @@ export default function Layout({ children }) {
             </Link>
           )}
 
-          {user?.role === "Admin" && (
+          {user?.usertype === "Admin" && (
             <>
               <Link
                 to="/view-users"
