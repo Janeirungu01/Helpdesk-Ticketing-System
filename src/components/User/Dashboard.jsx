@@ -10,114 +10,7 @@ import {
   FiLoader,
   FiAlertCircle
 } from "react-icons/fi";
-
-
-const dummyTickets = [
-  {
-    ticketId: "TIC-001",
-    createdBy: { name: "John Doe" },
-    subject: "Login Issue",
-    category: "Technical",
-    branch: "Main Office",
-    department: "IT",
-    date: "2025-04-15T10:30:00Z",
-    description: "Unable to login to the system after password reset",
-    priority: "high",
-    status: "Open",
-    updatedAt: "2025-04-15T10:30:00Z"
-  },
-  {
-    ticketId: "TIC-002",
-    createdBy: { name: "Jane Smith" },
-    subject: "Printer not working",
-    category: "Hardware",
-    branch: "Branch A",
-    department: "Administration",
-    date: "2025-04-17T14:20:00Z",
-    description: "The main printer on the second floor is not responding",
-    priority: "medium",
-    status: "Closed",
-    updatedAt: "2025-04-18T09:15:00Z"
-  },
-  {
-    ticketId: "TIC-003",
-    createdBy: { name: "Robert Johnson" },
-    subject: "Email not syncing",
-    category: "Software",
-    branch: "Branch B",
-    department: "Marketing",
-    date: "2025-04-18T11:45:00Z",
-    description: "Email not syncing on mobile device since this morning",
-    priority: "low",
-    status: "Open",
-    updatedAt: "2025-04-19T10:00:00Z"
-  },
-  {
-    ticketId: "TIC-004",
-    createdBy: { name: "Lisa Wong" },
-    subject: "VPN Connection Issue",
-    category: "Network",
-    branch: "Remote",
-    department: "Sales",
-    date: "2025-04-20T08:30:00Z",
-    description: "Cannot connect to VPN when working remotely",
-    priority: "high",
-    status: "Open",
-    updatedAt: "2025-04-20T08:30:00Z"
-  },
-  {
-    ticketId: "TIC-005",
-    createdBy: { name: "Michael Brown" },
-    subject: "Missing files on shared drive",
-    category: "Data",
-    branch: "Main Office",
-    department: "Finance",
-    date: "2025-04-21T15:10:00Z",
-    description: "Cannot access quarterly reports on shared drive",
-    priority: "high",
-    status: "Closed",
-    updatedAt: "2025-04-22T09:20:00Z"
-  },
-  {
-    ticketId: "TIC-006",
-    createdBy: { name: "Emily Clark" },
-    subject: "Software installation request",
-    category: "Software",
-    branch: "Branch C",
-    department: "HR",
-    date: "2025-04-22T13:40:00Z",
-    description: "Need Adobe Creative Suite installed on new laptop",
-    priority: "low",
-    status: "Reopened",
-    updatedAt: "2025-04-23T11:30:00Z"
-  },
-  {
-    ticketId: "TIC-007",
-    createdBy: { name: "David Wilson" },
-    subject: "Website loading slowly",
-    category: "Web",
-    branch: "Main Office",
-    department: "Marketing",
-    date: "2025-04-23T09:15:00Z",
-    description: "Company website taking too long to load",
-    priority: "medium",
-    status: "Resolved",
-    updatedAt: "2025-04-25T16:45:00Z"
-  },
-  {
-    ticketId: "TIC-008",
-    createdBy: { name: "Sarah Martinez" },
-    subject: "Password reset",
-    category: "Access",
-    branch: "Branch A",
-    department: "Customer Service",
-    date: "2025-04-24T10:50:00Z",
-    description: "Need password reset for CRM system",
-    priority: "medium",
-    status: "Resolved",
-    updatedAt: "2025-04-24T11:30:00Z"
-  }
-];
+import { dashboardTickets } from '../../Helpers/DummyData';
 
 const COLORS = ['#F87171', '#FBBF24', '#60A5FA', '#34D399'];
 
@@ -125,7 +18,7 @@ const Dashboard = () => {
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
-    setTickets(dummyTickets);
+    setTickets(dashboardTickets);
   }, []);
 
   const statusCounts = tickets.reduce((acc, ticket) => {
