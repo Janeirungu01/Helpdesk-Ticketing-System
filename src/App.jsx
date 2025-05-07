@@ -11,6 +11,8 @@ import ManageUsers from "./components/ManageUsers/ManageUsers";
 import Dashboard from "./components/User/Dashboard";
 import Department from "./components/ManageDepartments";
 import TicketPage from "./components/User/TicketsPage";
+import { AuthProvider } from "./context/AuthContext";
+import { SelectBranch } from "./components/SelectBranch";
 
 
 function App() {
@@ -18,81 +20,85 @@ function App() {
   const [loggedInUser, setUser] = useState(null);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login setUser={setUser} />} />
-        <Route
-          path="/tickets"
-          element={
-            <Layout>
-              <Tickets tickets={tickets} />
-            </Layout>
-          }
-        />
-        <Route
-          path="/add-ticket"
-          element={
-            <Layout>
-            <TicketForm
-              tickets={tickets}
-              loggedInUser={loggedInUser}
-              setTickets={setTickets}             
-            />
-             </Layout>
-          }
-        />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login setUser={setUser} />} />
+          <Route
+            path="/tickets"
+            element={
+              <Layout>
+                <Tickets tickets={tickets} />
+              </Layout>
+            }
+          />
+          <Route
+            path="/add-ticket"
+            element={
+              <Layout>
+                <TicketForm
+                  tickets={tickets}
+                  loggedInUser={loggedInUser}
+                  setTickets={setTickets}
+                />
+              </Layout>
+            }
+          />
 
-        <Route path="/" element={<Login setUser={setUser} />} />
-        <Route
-          path="/manage-users"
-          element={
-            <Layout>
-              <ManageUsers />
-            </Layout>
-          }
-        />
-        <Route
-          path="/view-users"
-          element={
-            <Layout>
-              <Dashboard />
-            </Layout>
-          }
-        />
+          <Route path="/" element={<Login setUser={setUser} />} />
+          <Route path="/select-branch" element={<SelectBranch />} />
 
-        <Route
-          path="/add-departments"
-          element={
-            <Layout>
-              <Department />
-            </Layout>
-          }
-        />
+          <Route
+            path="/manage-users"
+            element={
+              <Layout>
+                <ManageUsers />
+              </Layout>
+            }
+          />
+          <Route
+            path="/view-users"
+            element={
+              <Layout>
+                <Dashboard />
+              </Layout>
+            }
+          />
 
-<Route
-          path="/faqs"
-          element={
-            <Layout>
-              <KnowledgeBase />
-            </Layout>
-          }
-        />
+          <Route
+            path="/add-departments"
+            element={
+              <Layout>
+                <Department />
+              </Layout>
+            }
+          />
 
-        <Route
-          path="/ticket-page"
-          element={
-            <TicketPage
-              tickets={tickets}
-              loggedInUser={loggedInUser}
-              setTickets={setTickets}
-            />
-          }
-        />
+          <Route
+            path="/faqs"
+            element={
+              <Layout>
+                <KnowledgeBase />
+              </Layout>
+            }
+          />
 
-        <Route path="/ticket-page" element={<TicketPage />} />
-      </Routes>
-      <Toaster />
-    </Router>
+          <Route
+            path="/ticket-page"
+            element={
+              <TicketPage
+                tickets={tickets}
+                loggedInUser={loggedInUser}
+                setTickets={setTickets}
+              />
+            }
+          />
+
+          <Route path="/ticket-page" element={<TicketPage />} />
+        </Routes>
+        <Toaster />
+      </Router>
+    </AuthProvider>
   );
 }
 
