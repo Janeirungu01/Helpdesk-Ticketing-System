@@ -30,19 +30,19 @@ const UserTable = ({
             <td className="p-3 border space-x-2">
               <button
                 className={`px-3 py-1 rounded text-white ${
-                  user.status === "suspended"
+                  user.status === "Suspended"
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-blue-500 hover:bg-blue-700"
                 }`}
-                onClick={() => user.status === "active" && openEditModal(user)}
-                disabled={user.status === "suspended"}
+                onClick={() => user.status === "Active" && openEditModal(user)}
+                disabled={user.status === "Suspended"}
               >
                 Edit
               </button>
 
               <button
                 className={`px-3 py-1 rounded text-white ${
-                  user.status === "active"
+                  user.status === "Active"
                     ? "bg-red-500 hover:bg-red-700"
                     : "bg-green-500 hover:bg-green-700"
                 }`}

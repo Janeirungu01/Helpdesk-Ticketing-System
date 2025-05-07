@@ -57,13 +57,45 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (userData.password !== userData.password_confirmation) {
+  //     alert("Passwords do not match!");
+  //     return;
+  //   }
+  //   onSave(userData);
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (userData.password !== userData.password_confirmation) {
+  //     alert("Passwords do not match!");
+  //     return;
+  //   }
+  
+  //   const success = await onSave(userData);
+  //   if (success) {
+  //     setUserData(defaultUserData);
+  //     handleClose();
+  //   }
+  // };
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (userData.password !== userData.password_confirmation) {
       alert("Passwords do not match!");
       return;
     }
-    onSave(userData);
+  
+    try {
+      await onSave(userData);
+      setUserData(defaultUserData);
+      handleClose();
+    } catch (error) {
+      // Errors are already handled in onSave, so we just don't close the modal
+      console.error("Save operation failed:", error);
+    }
   };
 
   const handleCancel = () => {
@@ -161,3 +193,4 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
 };
 
 export default UserModal;
+

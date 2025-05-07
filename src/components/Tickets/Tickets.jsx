@@ -80,11 +80,11 @@ function Tickets({ tickets }) {
     setPromptOpen(false);
   };
 
-  const shouldDisplayTicket = ticket => loggedInUser?.role === "Admin" || !ticket.closed;
+  const shouldDisplayTicket = ticket => loggedInUser?.usertype === "Admin" || !ticket.closed;
 
   const ticketRows = useMemo(() => ticketList.filter(shouldDisplayTicket).map(ticket => {
-    const isAdmin = loggedInUser?.role === "Admin";
-    const isRegular = loggedInUser?.role === "Regular";
+    const isAdmin = loggedInUser?.usertype === "Admin";
+    const isAgent = loggedInUser?.usertype === "Agent";
     const isResolved = ticket.status === "Resolved";
     const isClosed = ticket.closed;
 
@@ -111,21 +111,21 @@ function Tickets({ tickets }) {
           {isAdmin && !isResolved && !isClosed && (
             <button onClick={() => handleModal(ticket)} className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Resolve</button>
           )}
-          {isRegular && isResolved && !isClosed && (
+          {isAgent && isResolved && !isClosed && (
             <button onClick={() => { setSelectedTicket(ticket); setPromptOpen(true); }} className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">Take Action</button>
           )}
-          {isRegular && isClosed && (
+          {isAgent && isClosed && (
             <button onClick={() => reopenTicket(ticket.ticketId)} className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Reopen</button>
           )}
         </td>
       </tr>
     );
-  }), [ticketList, loggedInUser?.role]);
+  }), [ticketList, loggedInUser?.usertype]);
 
   return (
     <div className="flex justify-center items-center md:px-2">
       <div className="w-full max-w-8xl bg-white p-6 rounded-lg shadow-md overflow-x-auto relative">
-        {loggedInUser?.role === "Regular" && promptOpen && selectedTicket && (
+        {loggedInUser?.usertype === "Agent" && promptOpen && selectedTicket && (
           <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded relative mb-4">
             <p className="text-sm font-medium">
               Your ticket, <strong>{selectedTicket.ticketId}</strong> has been resolved. Take action?
@@ -157,7 +157,7 @@ function Tickets({ tickets }) {
           <tbody>{ticketRows}</tbody>
         </table>
 
-        {loggedInUser?.role === "Regular" && (
+        {loggedInUser?.usertype === "Agent" && (
           <Link to="/add-ticket" className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded-lg">
             Add New Ticket
           </Link>

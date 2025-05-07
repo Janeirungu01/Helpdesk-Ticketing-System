@@ -54,7 +54,7 @@ const useUsers = () => {
         user.id === id
           ? {
               ...user,
-              status: user.status === "active" ? "suspended" : "active",
+              status: user.status === "Active" ? "Suspended" : "Active",
             }
           : user
       )
@@ -71,6 +71,50 @@ const useUsers = () => {
     }
   };
 
+  // const handleSaveUser = async (userData) => {
+  //   try {
+  //     const payload = {
+  //       user: {
+  //         fullname: userData.fullname,
+  //         email: userData.email,
+  //         username: userData.username,
+  //         password: userData.password,
+  //         password_confirmation: userData.password_confirmation,
+  //         usertype: userData.usertype,
+  //         branches: userData.branches,
+  //         status: "Active",
+  //       },
+  //     };
+
+  //     const res = await axios.post("http://127.0.0.1:3000/users", payload, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //       },
+  //     });
+
+  //     alert(`Registration successful.`);
+  //     console.log(res.data);
+
+  //     setUsers((prev) => [
+  //       ...prev,
+  //       {
+  //         ...res.data,
+  //         id: res.data.id || Date.now(),
+  //         status: res.data.status || "active",
+  //       },
+  //     ]);
+
+  //     closeModal();
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert(
+  //       "Registration failed: " +
+  //         (error.response?.data?.error?.join(", ") || "Server error")
+  //     );
+  //   }
+  // };
+
   const handleSaveUser = async (userData) => {
     try {
       const payload = {
@@ -85,17 +129,17 @@ const useUsers = () => {
           status: "Active",
         },
       };
-
+  
       const res = await axios.post("http://127.0.0.1:3000/users", payload, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
       });
-
+  
       alert(`Registration successful.`);
       console.log(res.data);
-
+  
       setUsers((prev) => [
         ...prev,
         {
@@ -104,17 +148,18 @@ const useUsers = () => {
           status: res.data.status || "active",
         },
       ]);
-
-      closeModal();
+  
+      return true; // Indicate success to the modal
     } catch (error) {
       console.error(error);
       alert(
         "Registration failed: " +
           (error.response?.data?.error?.join(", ") || "Server error")
       );
+      throw error; // Re-throw to let the modal know it failed
     }
   };
-
+  
   const filteredUsers = users.filter(
     (user) =>
       user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
