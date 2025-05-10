@@ -1,51 +1,13 @@
 import React, { useState } from "react";
 
-function KnowledgeBase() {
+function KnowledgeBase({ articles =[] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [expandedArticleId, setExpandedArticleId] = useState(null);
 
-  const articlesData = [
-    {
-      id: 2,
-      question: "How to submit a support ticket?",
-      answer: "Click on 'Create Ticket' from the dashboard and fill in the required details...",
-      category: "Support Process",
-      tags: ["ticket", "support", "submit"],
-    },
-    {
-      id: 3,
-      question: "What is the response time for tickets?",
-      answer: "Our average response time is within 24 hours during business days.",
-      category: "Support Process",
-      tags: ["response", "support", "time"],
-    },
-    {
-      id: 4,
-      question: "How do I update my email address?",
-      answer: "Navigate to Profile Settings > Email > Update Email Address.",
-      category: "Account Management",
-      tags: ["email", "update", "account"],
-    },
-    {
-      id: 5,
-      question: "What happens if I close a ticket?",
-      answer: "Closing a ticket marks it as resolved. You can reopen it within 7 days if needed.",
-      category: "Support Process",
-      tags: ["close", "ticket", "resolved"],
-    },
-    {
-      id: 6,
-      question: "How do I add attachments to my ticket?",
-      answer: "When creating or updating a ticket, use the 'Add Attachment' button to upload files like screenshots or documents.",
-      category: "Tickets",
-      tags: ["attachments", "upload", "files"]
-    },
-  ];
+  const uniqueCategories = ["All", ...new Set(articles.map((article) => article.category))];
 
-  const uniqueCategories = ["All", ...new Set(articlesData.map(article => article.category))];
-
-  const filteredArticles = articlesData.filter((article) => {
+  const filteredArticles = articles.filter((article) => {
     const matchesCategory = selectedCategory === "All" || article.category === selectedCategory;
     const matchesSearch =
       article.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -60,6 +22,7 @@ function KnowledgeBase() {
   return (
     <div className="p-4 max-w-6xl mx-auto text-gray-600">
       <h1 className="text-3xl font-bold mb-6 text-center">Knowledge Base</h1>
+
       <div className="flex justify-center mb-4">
         <input
           type="text"
