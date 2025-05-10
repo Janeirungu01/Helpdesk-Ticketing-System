@@ -6,14 +6,13 @@ import Login from "./components/Login";
 import Tickets from "./components/Tickets/Tickets";
 import Layout from "./components/Layout";
 import TicketForm from "./components/User/TicketForm";
-import KnowledgeBase from "./components/User/KnowledgeBase";
+import KnowledgeBaseWrapper from "./components/KnowledgeBaseWrapper";
 import ManageUsers from "./components/ManageUsers/ManageUsers";
 import Dashboard from "./components/User/Dashboard";
 import Department from "./components/ManageDepartments";
 import TicketPage from "./components/User/TicketsPage";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./Helpers/Api/AuthContext";
 import { SelectBranch } from "./components/SelectBranch";
-
 
 function App() {
   const [tickets, setTickets] = useState(dummyTickets);
@@ -73,12 +72,19 @@ function App() {
               </Layout>
             }
           />
-
           <Route
             path="/faqs"
             element={
               <Layout>
-                <KnowledgeBase />
+                <KnowledgeBaseWrapper view="Agent" />
+              </Layout>
+            }
+          />
+          <Route
+            path="/adminfaqs"
+            element={
+              <Layout>
+                <KnowledgeBaseWrapper view="Admin" />
               </Layout>
             }
           />
