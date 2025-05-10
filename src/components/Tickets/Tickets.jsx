@@ -56,15 +56,28 @@ function Tickets({ tickets }) {
     setTicketList(prev => prev.map(ticket => ticket.ticketId === id ? { ...ticket, ...updates } : ticket));
   };
 
-  const resolveTicket = () => {
-    updateTicket(selectedTicket.ticketId, {
-      status: "Resolved",
-      notes,
-      updatedAt: new Date().toISOString()
+  // const resolveTicket = () => {
+  //   updateTicket(selectedTicket.ticketId, {
+  //     status: "Resolved",
+  //     notes,
+  //     updatedAt: new Date().toISOString()
+  //   });
+  //   setPromptOpen(true);
+  //   closeModals();
+  // };
+
+  const resolveTicket = async () => {
+    await fetch(`http://localhost:3000/tickets/${selectedTicket.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: "Resolved", notes, updated_at: new Date().toISOString() })
     });
     setPromptOpen(true);
     closeModals();
   };
+  
 
   const closeTicket = id => {
     updateTicket(id, { closed: true });

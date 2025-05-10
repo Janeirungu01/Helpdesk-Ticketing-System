@@ -1,4 +1,4 @@
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../Helpers/Api/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -7,7 +7,6 @@ export function SelectBranch() {
   const { user, setCurrentBranch } = useAuth();
   const [selectedBranch, setSelectedBranch] = useState("");
   const navigate = useNavigate();
-
   const branches = user?.branches;
 
   const handleSelect = () => {

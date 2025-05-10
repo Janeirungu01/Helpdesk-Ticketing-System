@@ -12,7 +12,7 @@ import axios from "axios";
 
 import { MdDashboard, MdBusiness } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../Helpers/Api/AuthContext";
 import toast from "react-hot-toast";
 
 export default function Layout({ children }) {
@@ -36,7 +36,7 @@ export default function Layout({ children }) {
         },
       });
     } catch (error) {
-      console.warn("Logout request failed, continuing anyway");
+      console.warn("Logout request failed:", error);
     } finally {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
@@ -92,6 +92,7 @@ export default function Layout({ children }) {
               <span>Knowledge Base</span>
             </Link>
           )}
+            
 
           {user?.usertype === "Admin" && (
             <>
@@ -116,6 +117,14 @@ export default function Layout({ children }) {
                 <MdBusiness />
                 <span>Departments</span>
               </Link>
+
+            <Link
+              to="/adminfaqs"
+              className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
+            >
+              <FiBookOpen />
+              <span>Knowledge Base</span>
+            </Link>
             </>
           )}
         </nav>
