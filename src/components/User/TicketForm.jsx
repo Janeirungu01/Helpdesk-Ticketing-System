@@ -1,32 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { FaUserCircle } from "react-icons/fa";
-import { useEffect } from "react";
+import { useAuth } from "../../Helpers/Api/AuthContext";
+import axios from "axios";
 
-const TicketForm = ({  setTickets }) => {
+const TicketForm = () => {
+  const {user, token, branch} = useAuth();
   const navigate = useNavigate();
-
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-    } else {
-      toast.error("User not logged in");
-    }
-  }, []);
+  const [departments, setDepartments] = useState([]);
 
   const [formData, setFormData] = useState({
     subject: "",
-    department: "",
+    department_id: "",
     category: "",
-    priority: "Low",
+    priority: "low",
     description: "",
     attachment: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    branch: branch,
+    status:"open" 
   });
 
   const handleChange = (e) => {
@@ -44,19 +35,7 @@ const TicketForm = ({  setTickets }) => {
       ];
 
       if (file && allowedTypes.includes(file.type)) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setFormData((prevData) => ({
-            ...prevData,
-            attachment: {
-              name: file.name,
-              type: file.type,
-              data: reader.result,
-            },
-            updatedAt: new Date(),
-          }));
-        };
-        reader.readAsDataURL(file);
+        setFormData({ ...formData, attachment: files[0] });
       } else {
         toast.error(
           "Invalid file type. Only PDF, Word (doc/docx), JPG, and PNG are allowed."
@@ -64,55 +43,75 @@ const TicketForm = ({  setTickets }) => {
         e.target.value = "";
       }
     } else {
-      setFormData({ ...formData, [name]: value, updatedAt: new Date() });
+      setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const requiredFields = ["subject", "department", "priority", "description"];
-    for (let field of requiredFields) {
-      if (!formData[field]) {
-        toast.error(`Please fill in the ${field} field.`);
-        return;
-      }
+    const data = new FormData();
+    data.append('ticket[subject]', formData.subject.trim());
+    data.append('ticket[category]', formData.category);
+    data.append('ticket[department_id]', formData.department_id);
+    data.append('ticket[description]', formData.description);
+    data.append('ticket[priority]', formData.priority);
+    data.append('ticket[branch]', formData.branch);
+    data.append('ticket[status]', formData.status);
+    if (formData.attachment) {
+      data.append('ticket[attachment]', formData.attachment);
     }
 
-    const timestamp = new Date().toISOString();
+    try {
+      await axios.post('http://127.0.0.1:3000/tickets', data, {
+        headers: {
+        Authorization: `Bearer ${token.trim()}`,
 
-    const newTicket = {
-      ticketId: Date.now(),
-      subject: formData.subject,
-      category: formData.category,
-      department: formData.department,
-      priority: formData.priority,
-      description: formData.description,
-      branch: user?.branch || "Unknown",
-      createdBy: {
-        name: user?.userName || "Unknown",
-        email: user?.email || "Unknown",
-        userType: user?.userType || "User",
-      },
-      resolved: false,
-      date: timestamp,
-      attachment: formData.attachment?.name || null,
-    };
-
-    setTickets((prev) => [...prev, newTicket]);
- 
-    toast.success(`Ticket #${newTicket.ticketId} created successfully.`);
-    navigate("/tickets");
+        'Accept': 'application/json'
+        },
+      });
+      alert('Ticket submitted!');
+      navigate('/tickets');
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code outside the 2xx range
+        console.error('Response Error:', error.response.data);
+        console.error('Status:', error.response.status);
+        console.error('Headers:', error.response.headers);
+        alert(`Failed to submit ticket: ${error.response.data?.error || 'Server Error'}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+        alert('No response received from the server.');
+      } else {
+        // Something happened in setting up the request
+        console.error('Error setting up request:', error.message);
+        alert('Error setting up the request.');
+      }
+    }
   };
 
-  return (
-    // <div className="min-h-screen max-w-6xl px-3  text-gray-500">
-       <div className="p-4 max-w-6xl mx-auto text-gray-600">
+useEffect(() => {
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:3000/departments", {
+        headers: {
+          Authorization: `Bearer ${token.trim()}`,
+        },
+      });
+      setDepartments(response.data);
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+      toast.error("Failed to load departments");
+    }
+  };
 
-      {/* <div className="max-w-5xl mx-auto p-6 mt-4 rounded shadow"> */}
-        {/* <div className="flex justify-center items-center mb-4">
-          <h4 className=" text-3xl font-bold mb-6 text-center">Create Ticket</h4>
-        </div> */}
+  fetchDepartments();
+}, [token]);
+
+
+  return (
+       <div className="p-4 max-w-6xl mx-auto text-gray-600">
         <h1 className="text-3xl font-bold mb-6 text-center mr-[25%]" >Create Ticket</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
@@ -125,9 +124,9 @@ const TicketForm = ({  setTickets }) => {
             <input
               type="text"
               name="subject"
-              value={formData.subject}
+              value={formData.subject.trim()}
               onChange={handleChange}
-              // className="w-3/4 border border-gray-300 px-3 py-2 rounded focus:outline-none focus:border-gray-700"
+
               className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               placeholder="Subject"
               required
@@ -139,17 +138,36 @@ const TicketForm = ({  setTickets }) => {
               Department <span className="text-red-500">*</span>
             </label>
             <select
-              name="department"
-              value={formData.department}
+  name="department_id"
+  value={formData.department_id}
+  onChange={handleChange}
+  className="w-3/4 p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+  required
+>
+  <option value="">Select an option</option>
+  {departments.map((dept) => (
+    <option key={dept.id} value={dept.id}>
+      {dept.name}
+    </option>
+  ))}
+</select>
+
+          </div>
+          <div>
+            <label className="block font-semibold capitalize text-gray-600">
+              Category <span className="text-red-500">*</span>
+            </label>
+            <select
+              name="category"
+              value={formData.category}
               onChange={handleChange}
-              // className="w-3/4 border border-gray-300 px-3 py-2 mt-1 rounded"
               className="w-3/4 p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               required
             >
               <option value="">Select an option</option>
-              <option value="IT">IT</option>
-              <option value="HR">HR</option>
-              <option value="Finance">Finance</option>
+              <option value="Hardware">Hardware</option>
+              <option value="Software">Software</option>
+              <option value="Email">Email</option>
             </select>
           </div>
 
@@ -164,9 +182,9 @@ const TicketForm = ({  setTickets }) => {
               // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
               className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
             </select>
           </div>
 
