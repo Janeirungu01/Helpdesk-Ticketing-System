@@ -52,15 +52,13 @@ const ManageDepartments = () => {
       });
     }
   };
-  
 
   useEffect(() => {
     fetch("http://127.0.0.1:3000/departments")
       .then((res) => res.json())
       .then((data) => setDepartments(data))
       .catch((err) => console.error(err));
-  }, []);
-  
+  }, []);  
 
   const filteredDepartments = departments.filter((dept) =>
     dept.name.toLowerCase().includes(searchQuery.toLowerCase())

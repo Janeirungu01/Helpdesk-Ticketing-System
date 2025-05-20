@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-} from "@mui/material";
+import {Modal, Box, Typography, TextField, Button, Select,  MenuItem,
+  FormControl, } from "@mui/material";
 
 const branchesList = ["FEDHA", "TASSIA", "UTAWALA", "KITENGELA", "MACHAKOS"];
 
@@ -18,7 +10,7 @@ const defaultUserData = {
   username: "",
   password: "",
   password_confirmation: "",
-  usertype: "Client",
+  usertype: "Agent",
   branches: [],
 };
 
@@ -56,30 +48,7 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
         : [...prev.branches, branch],
     }));
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (userData.password !== userData.password_confirmation) {
-  //     alert("Passwords do not match!");
-  //     return;
-  //   }
-  //   onSave(userData);
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (userData.password !== userData.password_confirmation) {
-  //     alert("Passwords do not match!");
-  //     return;
-  //   }
-  
-  //   const success = await onSave(userData);
-  //   if (success) {
-  //     setUserData(defaultUserData);
-  //     handleClose();
-  //   }
-  // };
-  
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -93,7 +62,6 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
       setUserData(defaultUserData);
       handleClose();
     } catch (error) {
-      // Errors are already handled in onSave, so we just don't close the modal
       console.error("Save operation failed:", error);
     }
   };
