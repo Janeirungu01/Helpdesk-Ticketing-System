@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Modal, Backdrop, Fade, Box } from "@mui/material";
 import { getStatusClass, getPriorityClass, timeAgo } from "../../Helpers/DummyData";
 
-function Tickets({ tickets }) {
+function Tickets() {
   const loggedInUser = JSON.parse(localStorage.getItem("user"));
-
   const [ticketList, setTicketList] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,27 +12,34 @@ function Tickets({ tickets }) {
   const [notes, setNotes] = useState("");
   const [promptOpen, setPromptOpen] = useState(false);
 
-  useEffect(() => {
-    const storedTickets = JSON.parse(localStorage.getItem("tickets")) || [];
-    const storedIds = new Set(storedTickets.map(t => t.ticketId));
-
-    const newTickets = tickets.filter(t => !storedIds.has(t.ticketId)).map(t => ({
-      ...t,
-      status: t.status || "Open",
-      notes: t.notes || "",
-      updatedAt: t.updatedAt || t.date || new Date().toISOString(),
-      closed: false
-    }));
-
-    const merged = [...newTickets, ...storedTickets].sort((a, b) => new Date(b.updatedAt || b.date) - new Date(a.updatedAt || a.date));
-    setTicketList(merged);
-    localStorage.setItem("tickets", JSON.stringify(merged));
-  }, [tickets]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => localStorage.setItem("tickets", JSON.stringify(ticketList)), 300);
-    return () => clearTimeout(timeout);
-  }, [ticketList]);
+  const fetchTickets = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://127.0.0.1:3000/tickets", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch tickets");
+      }
+
+      const data = await response.json();
+
+      const sortedTickets = data.sort((a, b) => new Date(b.updatedAt || b.date) - new Date(a.updatedAt || a.date));
+      setTicketList(sortedTickets);
+      localStorage.setItem("tickets", JSON.stringify(sortedTickets));
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+    }
+  };
+
+  fetchTickets();
+}, []);
 
   const handleModal = (ticket, type = "resolve") => {
     setSelectedTicket(ticket);
@@ -53,11 +59,11 @@ function Tickets({ tickets }) {
   };
 
   const updateTicket = (id, updates) => {
-    setTicketList(prev => prev.map(ticket => ticket.ticketId === id ? { ...ticket, ...updates } : ticket));
+    setTicketList(prev => prev.map(ticket => ticket.ticket_id === id ? { ...ticket, ...updates } : ticket));
   };
 
   const resolveTicket = () => {
-    updateTicket(selectedTicket.ticketId, {
+    updateTicket(selectedTicket.ticket_id, {
       status: "Resolved",
       notes,
       updatedAt: new Date().toISOString()
@@ -90,16 +96,17 @@ function Tickets({ tickets }) {
 
     return (
       <tr
-        key={ticket.ticketId}
+        key={ticket.ticket_id}
         className={`text-gray-700 ${isClosed && isAdmin ? "" : isResolved ? "bg-yellow-100" : "bg-green-50"}`}
       >
-        <td className="p-3 border">{ticket.ticketId}</td>
-        <td className="p-2 border">{ticket.createdBy?.name || ticket.createdBy || "N/A"}</td>
+        <td className="p-3 border">{ticket.ticket_id}</td>
+        <td className="p-2 border">{ticket.created_by?.username || ticket.created_by_id?.username || ticket.created_by_id || "N/A"}</td>
         <td className="p-2 border">{ticket.subject}</td>
+        <td className="p-2 border">{ticket.category}</td>
         <td className="p-2 border">{ticket.branch}</td>
-        <td className="p-2 border">{ticket.department}</td>
-        <td className="p-2 border">{new Date(ticket.date).toLocaleDateString()}</td>
-        <td className="p-2 border text-sm italic text-gray-600">{ticket.updatedAt ? timeAgo(ticket.updatedAt) : "N/A"}</td>
+        <td className="p-2 border">{ticket.department?.name || ticket.department_id}</td>
+        <td className="p-2 border">{new Date(ticket.created_at).toLocaleDateString()}</td>
+        <td className="p-2 border text-sm italic text-gray-600">{ticket.updated_at ? timeAgo(ticket.updated_at) : "N/A"}</td>
         <td className={`p-2 border font-bold text-white capitalize text-center ${getPriorityClass(ticket.priority)}`}>{ticket.priority}</td>
         <td className="p-2 border text-center">
           <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(isClosed && isAdmin ? "Closed" : ticket.status)}`}>
@@ -115,7 +122,7 @@ function Tickets({ tickets }) {
             <button onClick={() => { setSelectedTicket(ticket); setPromptOpen(true); }} className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">Take Action</button>
           )}
           {isAgent && isClosed && (
-            <button onClick={() => reopenTicket(ticket.ticketId)} className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Reopen</button>
+            <button onClick={() => reopenTicket(ticket.ticket_id)} className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Reopen</button>
           )}
         </td>
       </tr>
@@ -128,11 +135,11 @@ function Tickets({ tickets }) {
         {loggedInUser?.usertype === "Agent" && promptOpen && selectedTicket && (
           <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded relative mb-4">
             <p className="text-sm font-medium">
-              Your ticket, <strong>{selectedTicket.ticketId}</strong> has been resolved. Take action?
+              Your ticket, <strong>{selectedTicket.ticket_id}</strong> has been resolved. Take action?
             </p>
             <div className="mt-2 flex justify-end space-x-2">
-              <button onClick={() => closeTicket(selectedTicket.ticketId)} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Close</button>
-              <button onClick={() => reopenTicket(selectedTicket.ticketId)} className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Reopen</button>
+              <button onClick={() => closeTicket(selectedTicket.ticket_id)} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Close</button>
+              <button onClick={() => reopenTicket(selectedTicket.ticket_id)} className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Reopen</button>
             </div>
           </div>
         )}
@@ -142,9 +149,10 @@ function Tickets({ tickets }) {
         <table className="w-full border-collapse border border-gray-200 text-sm md:text-base">
           <thead>
             <tr className="bg-gray-200 text-gray-700">
-              <th className="p-3 border">Ticket ID</th>
+              <th className="p-3 border">Ticket No.</th>
               <th className="p-3 border">Created By</th>
               <th className="p-3 border">Subject</th>
+              <th className="p-3 border">Category</th>
               <th className="p-3 border">Branch</th>
               <th className="p-3 border">Department</th>
               <th className="p-3 border">Date</th>
@@ -185,13 +193,13 @@ function Tickets({ tickets }) {
           <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-[95%] sm:w-[90%] max-w-2xl max-h-[90vh] overflow-y-auto text-gray-500">
             <h2 className="text-xl font-bold text-gray-700 mb-4">Ticket Details</h2>
             <div className="space-y-2 text-sm">
-              <p><strong>ID:</strong> {selectedTicket?.ticketId}</p>
-              <p><strong>Created By:</strong> {selectedTicket?.createdBy?.name || selectedTicket?.createdBy || "N/A"}</p>
+              <p><strong>ID:</strong> {selectedTicket?.ticket_id}</p>
+              <p><strong>Created By:</strong> {selectedTicket?.created_by?.username || selectedTicket?.created_by_id?.username || selectedTicket?.created_by_id || "N/A"}</p>
               <p><strong>Subject:</strong> {selectedTicket?.subject}</p>
               <p><strong>Category:</strong> {selectedTicket?.category}</p>
               <p><strong>Branch:</strong> {selectedTicket?.branch}</p>
-              <p><strong>Department:</strong> {selectedTicket?.department}</p>
-              <p><strong>Date:</strong> {new Date(selectedTicket?.date).toLocaleString()}</p>
+              <p><strong>Department:</strong> {selectedTicket?.department?.name || selectedTicket?.department_id}</p>
+              <p><strong>Date:</strong> {new Date(selectedTicket?.created_at).toLocaleString()}</p>
               <p><strong>Description:</strong> {selectedTicket?.description}</p>
               <p><strong>Priority:</strong> {selectedTicket?.priority}</p>
               {selectedTicket?.attachment && (
