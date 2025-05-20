@@ -1,13 +1,6 @@
 import { useState } from "react";
-import {
-  FaBars,
-  FaTimes,
-  FaTicketAlt,
-  FaPlus,
-  FaSignOutAlt,
-  FaBell,
-} from "react-icons/fa";
-import { FiBookOpen } from "react-icons/fi";
+import { FaBars, FaTimes, FaTicketAlt, FaPlus, FaSignOutAlt, FaBell} from "react-icons/fa";
+import { FiBookOpen, FiGitBranch } from "react-icons/fi";
 import axios from "axios";
 
 import { MdDashboard, MdBusiness } from "react-icons/md";
@@ -73,7 +66,7 @@ export default function Layout({ children }) {
             <FaTicketAlt />
             <span>Tickets</span>
           </Link>
-          {user?.usertype === "Regular" && (
+          {user?.usertype === "Agent" && (
             <Link
               to="/add-ticket"
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
@@ -124,6 +117,13 @@ export default function Layout({ children }) {
             >
               <FiBookOpen />
               <span>Knowledge Base</span>
+            </Link>
+            <Link
+              to="/add-branches"
+              className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
+            >
+              <FiGitBranch />
+              <span>Branches</span>
             </Link>
             </>
           )}

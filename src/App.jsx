@@ -12,6 +12,7 @@ import Dashboard from "./components/User/Dashboard";
 import Department from "./components/ManageDepartments";
 import TicketPage from "./components/User/TicketsPage";
 import { AuthProvider } from "./Helpers/Api/AuthContext";
+import Branches from "./components/Branches";
 import { SelectBranch } from "./components/SelectBranch";
 
 function App() {
@@ -97,6 +98,14 @@ function App() {
                 loggedInUser={loggedInUser}
                 setTickets={setTickets}
               />
+            }
+          />
+           <Route
+            path="/add-branches"
+            element={
+              <Layout>
+                <Branches />
+              </Layout>
             }
           />
 
