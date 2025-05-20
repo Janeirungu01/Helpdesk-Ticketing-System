@@ -120,7 +120,7 @@ function AdminKnowledgeBase({ articles = [], setArticles }) {
 
       <div className="space-y-4">
         {articles.map(({ id, question, answer, category, tags }) => (
-          <div key={id} className="p-4 border rounded shadow-sm bg-gray-50">
+          <div key={id} className="p-4 border rounded shadow-sm bg-white">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">{question}</h3>
               <div className="flex gap-2">
