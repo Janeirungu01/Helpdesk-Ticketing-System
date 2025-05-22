@@ -5,7 +5,7 @@ import { useAuth } from "../../Helpers/Api/AuthContext";
 import axios from "axios";
 
 const TicketForm = () => {
-  const {user, token, branch} = useAuth();
+  const {token, branch } = useAuth();
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
 
@@ -17,7 +17,7 @@ const TicketForm = () => {
     description: "",
     attachment: null,
     branch: branch,
-    status:"open" 
+    status: "open",
   });
 
   const handleChange = (e) => {
@@ -51,183 +51,185 @@ const TicketForm = () => {
     e.preventDefault();
 
     const data = new FormData();
-    data.append('ticket[subject]', formData.subject.trim());
-    data.append('ticket[category]', formData.category);
-    data.append('ticket[department_id]', formData.department_id);
-    data.append('ticket[description]', formData.description);
-    data.append('ticket[priority]', formData.priority);
-    data.append('ticket[branch]', formData.branch);
-    data.append('ticket[status]', formData.status);
+    data.append("ticket[subject]", formData.subject.trim());
+    data.append("ticket[category]", formData.category);
+    data.append("ticket[department_id]", formData.department_id);
+    data.append("ticket[description]", formData.description);
+    data.append("ticket[priority]", formData.priority);
+    data.append("ticket[branch]", formData.branch);
+    data.append("ticket[status]", formData.status);
     if (formData.attachment) {
-      data.append('ticket[attachment]', formData.attachment);
+      data.append("ticket[attachment]", formData.attachment);
     }
 
     try {
-      await axios.post('http://127.0.0.1:3000/tickets', data, {
+      await axios.post("http://127.0.0.1:3000/tickets", data, {
         headers: {
-        Authorization: `Bearer ${token.trim()}`,
+          Authorization: `Bearer ${token.trim()}`,
 
-        'Accept': 'application/json'
+          Accept: "application/json",
         },
       });
-      alert('Ticket submitted!');
-      navigate('/tickets');
+      alert("Ticket submitted!");
+      navigate("/tickets");
     } catch (error) {
       if (error.response) {
         // The server responded with a status code outside the 2xx range
-        console.error('Response Error:', error.response.data);
-        console.error('Status:', error.response.status);
-        console.error('Headers:', error.response.headers);
-        alert(`Failed to submit ticket: ${error.response.data?.error || 'Server Error'}`);
+        console.error("Response Error:", error.response.data);
+        console.error("Status:", error.response.status);
+        console.error("Headers:", error.response.headers);
+        alert(
+          `Failed to submit ticket: ${
+            error.response.data?.error || "Server Error"
+          }`
+        );
       } else if (error.request) {
         // The request was made but no response was received
-        console.error('No response received:', error.request);
-        alert('No response received from the server.');
+        console.error("No response received:", error.request);
+        alert("No response received from the server.");
       } else {
         // Something happened in setting up the request
-        console.error('Error setting up request:', error.message);
-        alert('Error setting up the request.');
+        console.error("Error setting up request:", error.message);
+        alert("Error setting up the request.");
       }
     }
   };
 
-useEffect(() => {
-  const fetchDepartments = async () => {
-    try {
-      const response = await axios.get("http://127.0.0.1:3000/departments", {
-        headers: {
-          Authorization: `Bearer ${token.trim()}`,
-        },
-      });
-      setDepartments(response.data);
-    } catch (error) {
-      console.error("Error fetching departments:", error);
-      toast.error("Failed to load departments");
-    }
-  };
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:3000/departments", {
+          headers: {
+            Authorization: `Bearer ${token.trim()}`,
+          },
+        });
+        setDepartments(response.data);
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+        toast.error("Failed to load departments");
+      }
+    };
 
-  fetchDepartments();
-}, [token]);
-
+    fetchDepartments();
+  }, [token]);
 
   return (
-       <div className="p-4 max-w-6xl mx-auto text-gray-600">
-        <h1 className="text-3xl font-bold mb-6 text-center mr-[25%]" >Create Ticket</h1>
+    <div className="p-4 max-w-6xl mx-auto text-gray-600">
+      <h1 className="text-3xl font-bold mb-6 text-center mr-[25%]">
+        Create Ticket
+      </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-          <div>
-            <label className="block text-lg font-semibold capitalize text-gray-600 ">
+      <form onSubmit={handleSubmit} className="space-y-4 mb-6">
+        <div>
+          <label className="block text-lg font-semibold capitalize text-gray-600 ">
+            Subject <span className="text-red-500">*</span>
+          </label>
 
-              Subject <span className="text-red-500">*</span>
-              </label>
-            
-            <input
-              type="text"
-              name="subject"
-              value={formData.subject.trim()}
-              onChange={handleChange}
+          <input
+            type="text"
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Subject"
+            required
+          />
+        </div>
 
-              className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Subject"
-              required
-            />
-          </div>
+        <div>
+          <label className="block font-semibold capitalize text-gray-600">
+            Department <span className="text-red-500">*</span>
+          </label>
+          <select
+            name="department_id"
+            value={formData.department_id}
+            onChange={handleChange}
+            className="w-3/4 p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            required
+          >
+            <option value="">Select an option</option>
+            {departments.map((dept) => (
+              <option key={dept.id} value={dept.id}>
+                {dept.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block font-semibold capitalize text-gray-600">
+            Category <span className="text-red-500">*</span>
+          </label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className="w-3/4 p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            required
+          >
+            <option value="">Select an option</option>
+            <option value="Hardware">Hardware</option>
+            <option value="Software">Software</option>
+            <option value="Email">Email</option>
+          </select>
+        </div>
 
-          <div>
-            <label className="block font-semibold capitalize text-gray-600">
-              Department <span className="text-red-500">*</span>
-            </label>
-            <select
-  name="department_id"
-  value={formData.department_id}
-  onChange={handleChange}
-  className="w-3/4 p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-  required
->
-  <option value="">Select an option</option>
-  {departments.map((dept) => (
-    <option key={dept.id} value={dept.id}>
-      {dept.name}
-    </option>
-  ))}
-</select>
+        <div>
+          <label className="block font-semibold capitalize text-gray-600">
+            Priority <span className="text-red-500">*</span>
+          </label>
+          <select
+            name="priority"
+            value={formData.priority}
+            onChange={handleChange}
+            // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
+            className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
 
-          </div>
-          <div>
-            <label className="block font-semibold capitalize text-gray-600">
-              Category <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-3/4 p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              required
-            >
-              <option value="">Select an option</option>
-              <option value="Hardware">Hardware</option>
-              <option value="Software">Software</option>
-              <option value="Email">Email</option>
-            </select>
-          </div>
+        <div>
+          <label className="block font-semibold capitalize text-gray-600">
+            Description <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
+            className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
 
-          <div>
-            <label className="block font-semibold capitalize text-gray-600">
-              Priority <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-              // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
-              className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
-            </select>
-          </div>
+        <div>
+          <label className="block font-semibold mb-1">
+            Attachment (PDF or Image)
+          </label>
+          <input
+            type="file"
+            name="attachment"
+            accept=".pdf,image/*"
+            onChange={handleChange}
+            // className="w-3/4 border border-gray-300 p-2 rounded"
+            className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          />
+          <p className="text-sm text-gray-500 mt-1">
+            Supported formats: .pdf, .jpg, .jpeg, .png
+          </p>
+        </div>
 
-          <div>
-            <label className="block font-semibold capitalize text-gray-600">
-              Description <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
-              className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block font-semibold mb-1">
-              Attachment (PDF or Image)
-            </label>
-            <input
-              type="file"
-              name="attachment"
-              accept=".pdf,image/*"
-              onChange={handleChange}
-              // className="w-3/4 border border-gray-300 p-2 rounded"
-              className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Supported formats: .pdf, .jpg, .jpeg, .png
-            </p>
-          </div>
-
-          <div className="pt-4 flex justify-end">
-            <button
-              type="submit"
-              className="bg-blue-500 font-semibold hover:bg-blue-700 text-white px-6 py-2 rounded mr-[25%]"
-            >
-              Create Ticket
-            </button>
-          </div>
-        </form>
-      </div>
+        <div className="pt-4 flex justify-end">
+          <button
+            type="submit"
+            className="bg-blue-500 font-semibold hover:bg-blue-700 text-white px-6 py-2 rounded mr-[25%]"
+          >
+            Create Ticket
+          </button>
+        </div>
+      </form>
+    </div>
     // </div>
   );
 };

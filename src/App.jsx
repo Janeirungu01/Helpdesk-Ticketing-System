@@ -1,7 +1,6 @@
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import { dummyTickets } from "./Helpers/DummyData";
 import Login from "./components/Login";
 import Tickets from "./components/Tickets/Tickets";
 import Layout from "./components/Layout";
@@ -16,7 +15,7 @@ import Branches from "./components/Branches";
 import { SelectBranch } from "./components/SelectBranch";
 
 function App() {
-  const [tickets, setTickets] = useState(dummyTickets);
+  const [tickets, setTickets] = useState();
   const [loggedInUser, setUser] = useState(null);
 
   return (

@@ -209,7 +209,7 @@ export const getStatusClass = (status) => {
       return "bg-blue-400 text-white";
     case "Escalated":
       return "bg-red-500 text-white";
-      case "Open":
+      case "open":
         return "bg-red-400 text-white";
         case "Pending":
           return "bg-red-400 text-white";
@@ -224,9 +224,9 @@ export const getStatusClass = (status) => {
 
 export const getPriorityClass = (priority) => {
   switch (priority) {
-    case "High":
+    case "high":
       return "bg-red-500";
-    case "Medium":
+    case "medium":
       return "bg-amber-500";
     default:
       return "bg-blue-500";

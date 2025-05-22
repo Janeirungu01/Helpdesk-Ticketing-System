@@ -67,6 +67,7 @@ export default function Layout({ children }) {
             <span>Tickets</span>
           </Link>
           {user?.usertype === "Agent" && (
+            <>
             <Link
               to="/add-ticket"
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
@@ -74,9 +75,6 @@ export default function Layout({ children }) {
               <FaPlus />
               <span>Create Ticket</span>
             </Link>
-          )}
-
-          {user?.usertype === "Agent" && (
             <Link
               to="/faqs"
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
@@ -84,8 +82,9 @@ export default function Layout({ children }) {
               <FiBookOpen />
               <span>Knowledge Base</span>
             </Link>
+            </>
           )}
-            
+           
 
           {user?.usertype === "Admin" && (
             <>
