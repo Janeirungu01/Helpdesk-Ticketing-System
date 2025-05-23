@@ -115,9 +115,9 @@ const TicketForm = () => {
 
   return (
     <div className="p-4 max-w-6xl mx-auto text-gray-600">
-      <h1 className="text-3xl font-bold mb-6 text-center mr-[25%]">
+      {/* <h1 className="text-3xl font-bold mb-6 text-center mr-[25%]">
         Create Ticket
-      </h1>
+      </h1> */}
 
       <form onSubmit={handleSubmit} className="space-y-4 mb-6">
         <div>

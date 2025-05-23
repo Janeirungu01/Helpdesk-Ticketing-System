@@ -203,7 +203,7 @@ export const dummyarticles = [
 
 export const getStatusClass = (status) => {
   switch (status) {
-    case "Resolved":
+    case "resolved":
       return "bg-green-500 text-white";
     case "In Progress":
       return "bg-blue-400 text-white";
@@ -213,9 +213,9 @@ export const getStatusClass = (status) => {
         return "bg-red-400 text-white";
         case "Pending":
           return "bg-red-400 text-white";
-          case "Reopened":
+          case "reopened":
             return "bg-blue-400 text-white";
-    case "Closed":
+    case "closed":
       return "bg-yellow-400 text-white";
     default:
       return "bg-gray-400 text-white";

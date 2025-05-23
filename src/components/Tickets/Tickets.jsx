@@ -62,36 +62,119 @@ function Tickets() {
     setTicketList(prev => prev.map(ticket => ticket.ticket_id === id ? { ...ticket, ...updates } : ticket));
   };
 
-  const resolveTicket = () => {
-    updateTicket(selectedTicket.ticket_id, {
-      status: "Resolved",
-      notes,
-      updatedAt: new Date().toISOString()
+  // const resolveTicket = () => {
+  //   updateTicket(selectedTicket.ticket_id, {
+  //     status: "resolved",
+  //     notes,
+  //     updatedAt: new Date().toISOString()
+  //   });
+  //   setPromptOpen(true);
+  //   closeModals();
+  // };
+
+  const resolveTicket = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`http://127.0.0.1:3000/tickets/${selectedTicket.ticket_id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        ticket: {
+          status: "resolved",
+          notes,
+          updated_at: new Date().toISOString()
+        }
+      })
     });
+
+    if (!response.ok) throw new Error("Failed to resolve ticket");
+
+    const updated = await response.json();
+    updateTicket(updated.ticket_id, updated);
     setPromptOpen(true);
     closeModals();
-  };
+  } catch (error) {
+    console.error("Error resolving ticket:", error);
+  }
+};
 
-  const closeTicket = id => {
-    updateTicket(id, { closed: true });
-    setPromptOpen(false);
-  };
-
-  const reopenTicket = id => {
-    updateTicket(id, {
-      closed: false,
-      status: "Reopened",
-      updatedAt: new Date().toISOString()
+  // const closeTicket = id => {
+  //   updateTicket(id, { closed: true });
+  //   setPromptOpen(false);
+  // };
+const closeTicket = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`http://127.0.0.1:3000/tickets/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        ticket: {
+          status: "closed"
+        }
+      })
     });
+
+    if (!response.ok) throw new Error("Failed to close ticket");
+
+    const updated = await response.json();
+    updateTicket(updated.ticket_id, updated);
     setPromptOpen(false);
-  };
+  } catch (error) {
+    console.error("Error closing ticket:", error);
+  }
+};
+
+  // const reopenTicket = id => {
+  //   updateTicket(id, {
+  //     closed: false,
+  //     status: "reopened",
+  //     updatedAt: new Date().toISOString()
+  //   });
+  //   setPromptOpen(false);
+  // };
+
+  const reopenTicket = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`http://127.0.0.1:3000/tickets/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        ticket: {
+          closed: false,
+          status: "reopened",
+          updated_at: new Date().toISOString()
+        }
+      })
+    });
+
+    if (!response.ok) throw new Error("Failed to reopen ticket");
+
+    const updated = await response.json();
+    updateTicket(updated.ticket_id, updated);
+    setPromptOpen(false);
+  } catch (error) {
+    console.error("Error reopening ticket:", error);
+  }
+};
+
 
   const shouldDisplayTicket = ticket => loggedInUser?.usertype === "Admin" || !ticket.closed;
 
   const ticketRows = useMemo(() => ticketList.filter(shouldDisplayTicket).map(ticket => {
     const isAdmin = loggedInUser?.usertype === "Admin";
     const isAgent = loggedInUser?.usertype === "Agent";
-    const isResolved = ticket.status === "Resolved";
+    const isResolved = ticket.status === "resolved";
     const isClosed = ticket.closed;
 
     return (
@@ -109,8 +192,8 @@ function Tickets() {
         <td className="p-2 border text-sm italic text-gray-600">{ticket.updated_at ? timeAgo(ticket.updated_at) : "N/A"}</td>
         <td className={`p-2 border font-bold text-white capitalize text-center ${getPriorityClass(ticket.priority)}`}>{ticket.priority}</td>
         <td className="p-2 border text-center">
-          <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(isClosed && isAdmin ? "Closed" : ticket.status)}`}>
-            {isClosed && isAdmin ? "Closed" : ticket.status}
+          <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(isClosed && isAdmin ? "closed" : ticket.status)}`}>
+            {isClosed && isAdmin ? "closed" : ticket.status}
           </span>
         </td>
         <td className="border p-2 space-x-2">
@@ -217,6 +300,7 @@ function Tickets() {
                 </div>
               )}
               <p><strong>Status:</strong> {selectedTicket?.status}</p>
+              <p><strong>Notes:</strong> {selectedTicket?.notes}</p>
             </div>
             <div className="flex justify-end space-x-2">
               <button onClick={closeModals} className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Cancel</button>
