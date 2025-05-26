@@ -62,16 +62,6 @@ function Tickets() {
     setTicketList(prev => prev.map(ticket => ticket.ticket_id === id ? { ...ticket, ...updates } : ticket));
   };
 
-  // const resolveTicket = () => {
-  //   updateTicket(selectedTicket.ticket_id, {
-  //     status: "resolved",
-  //     notes,
-  //     updatedAt: new Date().toISOString()
-  //   });
-  //   setPromptOpen(true);
-  //   closeModals();
-  // };
-
   const resolveTicket = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -101,10 +91,6 @@ function Tickets() {
   }
 };
 
-  // const closeTicket = id => {
-  //   updateTicket(id, { closed: true });
-  //   setPromptOpen(false);
-  // };
 const closeTicket = async (id) => {
   try {
     const token = localStorage.getItem("token");
@@ -131,14 +117,6 @@ const closeTicket = async (id) => {
   }
 };
 
-  // const reopenTicket = id => {
-  //   updateTicket(id, {
-  //     closed: false,
-  //     status: "reopened",
-  //     updatedAt: new Date().toISOString()
-  //   });
-  //   setPromptOpen(false);
-  // };
 
   const reopenTicket = async (id) => {
   try {
@@ -191,7 +169,7 @@ const closeTicket = async (id) => {
         <td className="p-2 border">{new Date(ticket.created_at).toLocaleDateString()}</td>
         <td className="p-2 border text-sm italic text-gray-600">{ticket.updated_at ? timeAgo(ticket.updated_at) : "N/A"}</td>
         <td className={`p-2 border font-bold text-white capitalize text-center ${getPriorityClass(ticket.priority)}`}>{ticket.priority}</td>
-        <td className="p-2 border text-center">
+        <td className="p-2 border text-center capitalize">
           <span className={`px-2 py-1 rounded text-xs font-semibold ${getStatusClass(isClosed && isAdmin ? "closed" : ticket.status)}`}>
             {isClosed && isAdmin ? "closed" : ticket.status}
           </span>
@@ -313,3 +291,4 @@ const closeTicket = async (id) => {
 }
 
 export default Tickets;
+

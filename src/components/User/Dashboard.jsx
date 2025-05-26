@@ -1,43 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import {
-  PieChart, Pie, Cell,
-  BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
-  ResponsiveContainer,
-} from 'recharts';
-import {
-  FiCheckCircle,
-  FiClock,
-  FiLoader,
-  FiAlertCircle
-} from "react-icons/fi";
-import { dashboardTickets } from '../../Helpers/DummyData';
+import { useState, useEffect } from 'react';
+import { PieChart, Pie, Cell,  BarChart, Bar, XAxis, YAxis, Tooltip, Legend,
+  ResponsiveContainer} from 'recharts';
+import { FiCheckCircle, FiClock, FiLoader, FiAlertCircle} from "react-icons/fi";
+import axios from 'axios';
 
 const COLORS = ['#F87171', '#FBBF24', '#60A5FA', '#34D399'];
 
 const Dashboard = () => {
   const [tickets, setTickets] = useState([]);
 
-  useEffect(() => {
-    setTickets(dashboardTickets);
+    useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get('http://127.0.0.1:3000/tickets', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      }); 
+        setTickets(response.data);
+      } catch (error) {
+        console.error('Error fetching tickets:', error);
+      }
+    };
+    
+
+    fetchTickets();
   }, []);
 
   const statusCounts = tickets.reduce((acc, ticket) => {
-    acc[ticket.status] = (acc[ticket.status] || 0) + 1;
-    return acc;
-  }, {});
+  acc[ticket.status] = (acc[ticket.status] || 0) + 1;
+  return acc;
+}, {});
 
-  const totalTickets = tickets.length;
-  const statusData = Object.entries(statusCounts).map(([status, count]) => ({
+const totalTickets = tickets.length;
+
+const statusData = ["open", "resolved", "reopened", "closed"].map((status) => {
+  const count = statusCounts[status] || 0;
+  return {
     name: status,
     value: count,
-    percentage: ((count / totalTickets) * 100).toFixed(2),
-  }));
+    percentage: totalTickets > 0 ? ((count / totalTickets) * 100).toFixed(2) : 0
+  };
+});
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg text-gray-600">
       <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 capitalize">
         {statusData.map((status, index) => (
           <div key={status.name} className="p-4 bg-gray-100 rounded shadow ">
             <div className='flex justify-between'>
@@ -107,7 +119,7 @@ const Dashboard = () => {
     <table className="min-w-full bg-white shadow rounded-lg overflow-hidden">
       <thead className="bg-gray-100">
         <tr>
-          <th className="px-6 py-3 text-left text-xs font-bold text-gray-600  tracking-wider">Id</th>
+          <th className="px-6 py-3 text-left text-xs font-bold text-gray-600  tracking-wider">Ticket No.</th>
           <th className="px-6 py-3 text-left text-xs font-bold text-gray-600  tracking-wider">Subject</th>
           <th className="px-6 py-3 text-left text-xs font-bold text-gray-600  tracking-wider">Status</th>
           <th className="px-6 py-3 text-left text-xs font-bold text-gray-600  tracking-wider">Date</th>
@@ -116,22 +128,22 @@ const Dashboard = () => {
       <tbody >
         {tickets.slice(0, 5).map((ticket) => {
           const statusIcon = {
-            Open: <FiAlertCircle className="text-red-500" />,
-            "Closed": <FiLoader className="text-yellow-500 animate-spin" />,
-            Reopened: <FiClock className="text-blue-500" />,
-            Resolved: <FiCheckCircle className="text-green-500" />,
+            open: <FiAlertCircle className="text-red-500" />,
+            "closed": <FiLoader className="text-yellow-500 animate-spin" />,
+            reopened: <FiClock className="text-blue-500" />,
+            resolved: <FiCheckCircle className="text-green-500" />,
           }[ticket.status] || null;
 
           return (
-            <tr key={ticket.ticketId}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{ticket.ticketId}</td>
+            <tr key={ticket.ticket_id}>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">{ticket.ticket_id}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{ticket.subject}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center gap-2">
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center gap-2 capitalize">
                 {statusIcon}
                 {ticket.status}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                {new Date(ticket.date).toLocaleDateString()}
+                {new Date(ticket.created_at).toLocaleDateString()}
               </td>
             </tr>
           );
