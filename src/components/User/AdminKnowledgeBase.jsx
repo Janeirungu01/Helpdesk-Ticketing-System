@@ -10,63 +10,45 @@ function AdminKnowledgeBase({ articles = [], setArticles }) {
   const handleChange = ({ target: { name, value } }) =>
     setForm((f) => ({ ...f, [name]: value }));
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const tags = form.tags.split(",").map((t) => t.trim());
-
-  //   const updated = editingArticle
-  //     ? articles.map((a) =>
-  //         a.id === editingArticle.id ? { ...a, ...form, tags } : a
-  //       )
-  //     : [...articles, { id: Date.now(), ...form, tags }];
-
-  //   setArticles(updated);
-  //   setForm(initialForm);
-  //   setEditingArticle(null);
-  // };
-
-  // const handleEdit = (article) => {
-  //   setForm({ ...article, tags: article.tags.join(", ") });
-  //   setEditingArticle(article);
-  // };
-
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const tagsArray = form.tags.split(",").map((tag) => tag.trim());
-    // const payload = { ...form, tags: tagsArray.join(",") };
-    const payload = { ...form, tags: tagsArray };
+  e.preventDefault();
+  const tagsArray = form.tags.split(",").map((tag) => tag.trim()).filter(Boolean);
 
-    if (editingArticle) {
-      axios
-        .put(`http://127.0.0.1:3000/articles/${editingArticle.id}`, payload)
-        .then((res) => {
-          setArticles((prev) =>
-            prev.map((a) => (a.id === res.data.id ? res.data : a))
-          );
-          setEditingArticle(null);
-          setForm({ question: "", answer: "", category: "", tags: "" });
-        });
-    } else {
-      axios.post("http://127.0.0.1:3000/articles", payload).then((res) => {
-        setArticles((prev) => [...prev, res.data]);
-        setForm({ question: "", answer: "", category: "", tags: "" });
+  const payload = {
+    question: form.question.trim(),
+    answer: form.answer.trim(),
+    category: form.category.trim(),
+    tags: tagsArray,
+  };
+
+  if (editingArticle) {
+    axios
+      .put(`http://127.0.0.1:3000/articles/${editingArticle.id}`, payload)
+      .then((res) => {
+        setArticles((prev) =>
+          prev.map((a) => (a.id === res.data.id ? res.data : a))
+        );
+        setEditingArticle(null);
+        setForm(initialForm);
       });
-    }
-  };
-
-  const handleEdit = (article) => {
-    setForm({
-      question: article.question,
-      answer: article.answer,
-      category: article.category,
-      tags: article.tags,
+  } else {
+    axios.post("http://127.0.0.1:3000/articles", payload).then((res) => {
+      setArticles((prev) => [...prev, res.data]);
+      setForm(initialForm);
     });
-    setEditingArticle(article);
-  };
+  }
+};
 
-  // const handleDelete = (id) =>
-  //   window.confirm("Delete this article?") &&
-  //   setArticles(articles.filter((a) => a.id !== id));
+const handleEdit = (article) => {
+  setForm({
+    question: article.question,
+    answer: article.answer,
+    category: article.category,
+    tags: Array.isArray(article.tags) ? article.tags.join(", ") : article.tags,
+  });
+  setEditingArticle(article);
+};
+
 
   const handleDelete = (id) => {
     if (window.confirm("Delete this article?")) {
