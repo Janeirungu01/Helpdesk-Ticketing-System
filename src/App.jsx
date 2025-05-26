@@ -13,6 +13,7 @@ import TicketPage from "./components/User/TicketsPage";
 import { AuthProvider } from "./Helpers/Api/AuthContext";
 import Branches from "./components/Branches";
 import { SelectBranch } from "./components/SelectBranch";
+import CategoryManager from "./components/User/CategoryManager";
 
 function App() {
   const [tickets, setTickets] = useState();
@@ -104,6 +105,14 @@ function App() {
             element={
               <Layout>
                 <Branches />
+              </Layout>
+            }
+          />
+               <Route
+            path="/manage-categories"
+            element={
+              <Layout>
+                <CategoryManager />
               </Layout>
             }
           />
