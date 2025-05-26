@@ -5,9 +5,10 @@ import { useAuth } from "../../Helpers/Api/AuthContext";
 import axios from "axios";
 
 const TicketForm = () => {
-  const {token, branch } = useAuth();
+  const { token, branch } = useAuth();
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     subject: "",
@@ -74,7 +75,6 @@ const TicketForm = () => {
       navigate("/tickets");
     } catch (error) {
       if (error.response) {
-        // The server responded with a status code outside the 2xx range
         console.error("Response Error:", error.response.data);
         console.error("Status:", error.response.status);
         console.error("Headers:", error.response.headers);
@@ -84,11 +84,9 @@ const TicketForm = () => {
           }`
         );
       } else if (error.request) {
-        // The request was made but no response was received
         console.error("No response received:", error.request);
         alert("No response received from the server.");
       } else {
-        // Something happened in setting up the request
         console.error("Error setting up request:", error.message);
         alert("Error setting up the request.");
       }
@@ -96,29 +94,29 @@ const TicketForm = () => {
   };
 
   useEffect(() => {
-    const fetchDepartments = async () => {
+    const fetchDepartmentsAndCategories = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:3000/departments", {
-          headers: {
-            Authorization: `Bearer ${token.trim()}`,
-          },
-        });
-        setDepartments(response.data);
+        const [deptRes, catRes] = await Promise.all([
+          axios.get("http://127.0.0.1:3000/departments", {
+            headers: { Authorization: `Bearer ${token.trim()}` },
+          }),
+          axios.get("http://127.0.0.1:3000/categories", {
+            headers: { Authorization: `Bearer ${token.trim()}` },
+          }),
+        ]);
+        setDepartments(deptRes.data);
+        setCategories(catRes.data);
       } catch (error) {
-        console.error("Error fetching departments:", error);
-        toast.error("Failed to load departments");
+        console.error("Error fetching data:", error);
+        toast.error("Failed to load departments or categories");
       }
     };
 
-    fetchDepartments();
+    fetchDepartmentsAndCategories();
   }, [token]);
 
   return (
     <div className="p-4 max-w-6xl mx-auto text-gray-600">
-      {/* <h1 className="text-3xl font-bold mb-6 text-center mr-[25%]">
-        Create Ticket
-      </h1> */}
-
       <form onSubmit={handleSubmit} className="space-y-4 mb-6">
         <div>
           <label className="block text-lg font-semibold capitalize text-gray-600 ">
@@ -167,9 +165,11 @@ const TicketForm = () => {
             required
           >
             <option value="">Select an option</option>
-            <option value="Hardware">Hardware</option>
-            <option value="Software">Software</option>
-            <option value="Email">Email</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -198,7 +198,6 @@ const TicketForm = () => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
             className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
