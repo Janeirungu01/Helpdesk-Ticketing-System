@@ -55,27 +55,28 @@ const CategoryManager = () => {
   };
 
   return (
-    <div className="max-w-4xl p-6 mx-auto mt-10 bg-white text-gray-600 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Manage Categories</h2>
+    <div className="p-6 mx-auto bg-white text-gray-600 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-4 text-gray-600">Manage Categories</h2>
 
-      <form onSubmit={handleAddCategory} className="flex gap-2 mb-6">
+      <form onSubmit={handleAddCategory}>
+         <div className="flex justify-between items-center mb-4">  
         <input
           type="text"
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
           placeholder="New category name"
-          className="flex-1 p-2 border border-gray-300 rounded"
+          className="px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1"
         />
         <button
           type="submit"
           disabled={loading}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          {loading ? "Adding..." : "Add"}
+          className="px-4 py-2 bg-blue-600  text-white rounded hover:bg-blue-700">
+          {loading ? "Adding..." : "+ Add Category"}
         </button>
+        </div>
       </form>
 
-      <ul>
+      {/* <ul>
         {categories.map((cat) => (
           <li key={cat.id} className="flex justify-between items-center mb-2">
             <span>{cat.name}</span>
@@ -87,7 +88,32 @@ const CategoryManager = () => {
             </button>
           </li>
         ))}
-      </ul>
+      </ul> */}
+
+       <table className="w-full border-collapse border text-gray-700 ">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="border px-4 py-2">Name</th>
+            <th className="border px-4 py-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.map((cat) => (
+            <tr key={cat.id}>
+              <td className="border px-4 py-2">{cat.name}</td>
+              <td className="border px-4 py-2">
+                <button
+                  onClick={() => handleDelete(cat.id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
     </div>
   );
 };
