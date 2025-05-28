@@ -43,31 +43,33 @@ const Branches = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-semibold mb-4">Manage Branches</h2>
-
-      <form onSubmit={handleAddBranch} className="flex gap-2 mb-4">
+    <div className="mx-auto p-6 bg-white text-gray-600">
+      <h2 className="text-2xl font-bold mb-4 text-gray-600">Manage Branches</h2>  
+      <form onSubmit={handleAddBranch} >
+        <div className="flex justify-between items-center mb-4">  
         <input
           type="text"
           placeholder="Branch Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border rounded px-3 py-1 w-1/3"
+          className="px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1"
         />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-1 rounded">
-          Add
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+          + Add Branch 
         </button>
+          </div> 
       </form>
+    
 
       <input
         type="text"
         placeholder="Search branches..."
         value={query}
         onChange={handleSearch}
-        className="border px-3 py-1 rounded w-full mb-4"
+        className="px-4 py-2 border rounded-md w-1/3 mb-4 focus:outline-none focus:border-gray-700 focus:ring-1"
       />
 
-      <table className="w-full border text-gray-600">
+      <table className="w-full border-collapse border text-gray-700">
         <thead>
           <tr className="bg-gray-200">
             <th className="border px-4 py-2">Name</th>
