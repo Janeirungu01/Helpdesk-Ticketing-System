@@ -158,7 +158,6 @@ const closeTicket = async (id) => {
     const isAdmin = loggedInUser?.usertype === "Admin";
     const isAgent = loggedInUser?.usertype === "Agent";
     const isResolved = ticket.status === "resolved";
-    // const isClosed = ticket.closed;
     const isClosed = ticket.closed === true || ticket.closed === "true";
 
 
@@ -212,8 +211,7 @@ const closeTicket = async (id) => {
           </div>
         )}
 
-        <h2 className="text-2xl font-bold text-gray-700 mb-4">Tickets</h2>
-
+        <h2 className="text-2xl font-bold text-gray-700 text-center mb-2">Tickets</h2>
         <table className="w-full border-collapse border border-gray-200 text-sm md:text-base">
           <thead>
             <tr className="bg-gray-200 text-gray-700">
