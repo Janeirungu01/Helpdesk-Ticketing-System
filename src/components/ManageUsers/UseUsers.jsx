@@ -85,17 +85,17 @@ const useUsers = () => {
   //         status: "Active",
   //       },
   //     };
-
+  
   //     const res = await axios.post("http://127.0.0.1:3000/users", payload, {
   //       headers: {
   //         "Content-Type": "application/json",
   //         Accept: "application/json",
   //       },
   //     });
-
+  
   //     alert(`Registration successful.`);
   //     console.log(res.data);
-
+  
   //     setUsers((prev) => [
   //       ...prev,
   //       {
@@ -104,61 +104,90 @@ const useUsers = () => {
   //         status: res.data.status || "active",
   //       },
   //     ]);
-
-  //     closeModal();
+  
+  //     return true; 
   //   } catch (error) {
   //     console.error(error);
   //     alert(
   //       "Registration failed: " +
   //         (error.response?.data?.error?.join(", ") || "Server error")
   //     );
+  //     throw error;
   //   }
   // };
-
   const handleSaveUser = async (userData) => {
-    try {
-      const payload = {
-        user: {
-          fullname: userData.fullname,
-          email: userData.email,
-          username: userData.username,
-          password: userData.password,
-          password_confirmation: userData.password_confirmation,
-          usertype: userData.usertype,
-          branches: userData.branches,
-          status: "Active",
-        },
-      };
-  
-      const res = await axios.post("http://127.0.0.1:3000/users", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
-  
-      alert(`Registration successful.`);
-      console.log(res.data);
-  
+  try {
+    const token = localStorage.getItem("token"); // Assuming you're using JWT or similar
+
+    // Build user payload
+    const userPayload = {
+      fullname: userData.fullname,
+      email: userData.email,
+      username: userData.username,
+      usertype: userData.usertype,
+      branches: userData.branches,
+      status: "Active",
+    };
+
+    // Only include password fields if they were entered
+    if (userData.password && userData.password_confirmation) {
+      userPayload.password = userData.password;
+      userPayload.password_confirmation = userData.password_confirmation;
+    }
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: token, // Required for secure endpoints
+      },
+    };
+
+    let res;
+    if (userData.id) {
+      // Update existing user
+      res = await axios.put(
+        `http://127.0.0.1:3000/users/${userData.id}`,
+        { user: userPayload },
+        config
+      );
+
+      // Update the user in the state
+      setUsers((prevUsers) =>
+        prevUsers.map((u) =>
+          u.id === res.data.id ? { ...u, ...res.data } : u
+        )
+      );
+    } else {
+      // Create new user
+      res = await axios.post(
+        "http://127.0.0.1:3000/users",
+        { user: userPayload },
+        config
+      );
+
       setUsers((prev) => [
         ...prev,
         {
           ...res.data,
           id: res.data.id || Date.now(),
-          status: res.data.status || "active",
+          status: res.data.status || "Active",
         },
       ]);
-  
-      return true; // Indicate success to the modal
-    } catch (error) {
-      console.error(error);
-      alert(
-        "Registration failed: " +
-          (error.response?.data?.error?.join(", ") || "Server error")
-      );
-      throw error; // Re-throw to let the modal know it failed
     }
-  };
+
+    alert(`${userData.id ? "User updated" : "Registration successful"}.`);
+    return true;
+  } catch (error) {
+    console.error("Save error:", error);
+    alert(
+      "Save failed: " +
+        (error.response?.data?.error?.join(", ") || "Server error")
+    );
+    throw error;
+  }
+};
+
   
   const filteredUsers = users.filter(
     (user) =>

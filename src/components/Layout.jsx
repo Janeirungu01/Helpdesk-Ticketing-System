@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FaBars, FaTimes, FaTicketAlt, FaPlus, FaSignOutAlt, FaBell} from "react-icons/fa";
-import { FiBookOpen, FiGitBranch } from "react-icons/fi";
-import { BiCategory } from "react-icons/bi"
+import { FiBookOpen, FiGitBranch, FiGrid } from "react-icons/fi";
 import axios from "axios";
 
 import { MdDashboard, MdBusiness } from "react-icons/md";
@@ -129,7 +128,7 @@ export default function Layout({ children }) {
               to="/manage-categories"
               className="flex items-center space-x-3 p-2 hover:bg-blue-500 rounded-lg"
             >
-              <BiCategory />
+              <FiGrid  />
               <span>Ticket Categories</span>
             </Link>
             </>

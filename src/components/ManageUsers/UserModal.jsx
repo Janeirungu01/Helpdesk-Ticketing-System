@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {Modal, Box, Typography, TextField, Button, Select,  MenuItem,
   FormControl, } from "@mui/material";
 
@@ -31,9 +31,12 @@ const modalStyle = {
 const UserModal = ({ open, handleClose, editUser, onSave }) => {
   const [userData, setUserData] = useState(defaultUserData);
 
+  // useEffect(() => {
+  //   setUserData(editUser || defaultUserData);
+  // }, [editUser]);
   useEffect(() => {
-    setUserData(editUser || defaultUserData);
-  }, [editUser]);
+  setUserData(editUser ? { ...defaultUserData, ...editUser } : defaultUserData);
+}, [editUser]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
