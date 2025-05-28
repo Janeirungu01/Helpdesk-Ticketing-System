@@ -46,7 +46,7 @@ AxiosInstance.interceptors.response.use(
         // Handle token refresh failure (e.g., redirect to login)
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        window.location.href = "/";
         return Promise.reject(refreshError);
       }
     }
