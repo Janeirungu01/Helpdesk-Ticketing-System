@@ -12,7 +12,6 @@ function Tickets() {
   const [notes, setNotes] = useState("");
   const [promptOpen, setPromptOpen] = useState(false);
 
-
   useEffect(() => {
   const fetchTickets = async () => {
     try {
@@ -30,7 +29,13 @@ function Tickets() {
 
       const data = await response.json();
 
-      const sortedTickets = data.sort((a, b) => new Date(b.updatedAt || b.date) - new Date(a.updatedAt || a.date));
+    const sortedTickets = data
+        .map(ticket => ({
+          ...ticket,
+          branch: ticket.branch || loggedInUser?.branch || "N/A"
+        }))
+        .sort((a, b) => new Date(b.updatedAt || b.date) - new Date(a.updatedAt || a.date));
+
       setTicketList(sortedTickets);
       localStorage.setItem("tickets", JSON.stringify(sortedTickets));
     } catch (error) {
@@ -153,7 +158,9 @@ const closeTicket = async (id) => {
     const isAdmin = loggedInUser?.usertype === "Admin";
     const isAgent = loggedInUser?.usertype === "Agent";
     const isResolved = ticket.status === "resolved";
-    const isClosed = ticket.closed;
+    // const isClosed = ticket.closed;
+    const isClosed = ticket.closed === true || ticket.closed === "true";
+
 
     return (
       <tr
@@ -164,7 +171,7 @@ const closeTicket = async (id) => {
         <td className="p-2 border">{ticket.created_by?.username || ticket.created_by_id?.username || ticket.created_by_id || "N/A"}</td>
         <td className="p-2 border">{ticket.subject}</td>
         <td className="p-2 border">{ticket.category}</td>
-        <td className="p-2 border">{ticket.branch}</td>
+        <td className="p-2 border">{ticket.branch || 'N/A'}</td>
         <td className="p-2 border">{ticket.department?.name || ticket.department_id}</td>
         <td className="p-2 border">{new Date(ticket.created_at).toLocaleDateString()}</td>
         <td className="p-2 border text-sm italic text-gray-600">{ticket.updated_at ? timeAgo(ticket.updated_at) : "N/A"}</td>

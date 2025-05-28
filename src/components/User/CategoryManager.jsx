@@ -75,21 +75,6 @@ const CategoryManager = () => {
         </button>
         </div>
       </form>
-
-      {/* <ul>
-        {categories.map((cat) => (
-          <li key={cat.id} className="flex justify-between items-center mb-2">
-            <span>{cat.name}</span>
-            <button
-              onClick={() => handleDelete(cat.id)}
-              className="text-red-500 hover:underline"
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul> */}
-
        <table className="w-full border-collapse border text-gray-700 ">
         <thead>
           <tr className="bg-gray-200">

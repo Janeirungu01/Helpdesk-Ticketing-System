@@ -51,13 +51,20 @@ const TicketForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const branch = localStorage.getItem("branch");
+    if (!branch) {
+      toast.error("Branch not selected. Please log in again.");
+      navigate("/select-branch");
+      return;
+    }
     const data = new FormData();
     data.append("ticket[subject]", formData.subject.trim());
     data.append("ticket[category]", formData.category);
     data.append("ticket[department_id]", formData.department_id);
     data.append("ticket[description]", formData.description);
     data.append("ticket[priority]", formData.priority);
-    data.append("ticket[branch]", formData.branch);
+    // data.append("ticket[branch]", formData.branch);
+    data.append("ticket[branch]", branch);
     data.append("ticket[status]", formData.status);
     if (formData.attachment) {
       data.append("ticket[attachment]", formData.attachment);
