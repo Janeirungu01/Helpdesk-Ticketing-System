@@ -128,7 +128,6 @@ const handleEdit = (article) => {
             </p>
 
             <div className="flex flex-wrap mt-2 gap-1">
-            {/* {tags.map((tag, idx) => ( */}
               {Array.isArray(tags) && tags.map((tag, idx) => (
                   <span
                     key={idx}

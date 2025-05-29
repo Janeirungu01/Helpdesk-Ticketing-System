@@ -81,7 +81,7 @@ const ManageDepartments = () => {
 
         <button
           onClick={openModal}
-          className="px-4 py-2 bg-green-500 text-white rounded-lg"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg"
         >
           + Add Department
         </button>
@@ -111,7 +111,7 @@ const ManageDepartments = () => {
                 </button>
                 <button
                   className={`px-3 py-1 rounded text-white ${
-                    dept.visible ? "bg-red-500" : "bg-green-500"
+                    dept.visible ? "bg-red-500" : "bg-blue-500"
                   }`}
                   onClick={() => handleToggleVisibility(dept.id)}
                 >

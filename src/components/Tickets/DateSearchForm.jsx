@@ -9,7 +9,7 @@ const DateSearchForm = ({ onSearch, initialStartDate, initialEndDate }) => {
   };
 
   return (
-    <fieldset className="border border-gray-400 p-4 rounded-lg mb-6 shadow-sm bg-white bg-opacity-80 max-w-4xl mx-auto">
+    <fieldset className="border border-gray-400 p-4 rounded-lg mb-6 text-gray-700 shadow-sm bg-white bg-opacity-80 max-w-4xl mx-auto">
         <legend className="text-xl font-semibold px-2">Search By</legend>
         <div className="mb-6 flex flex-wrap justify-center gap-6 md:gap-4">
           <div>
