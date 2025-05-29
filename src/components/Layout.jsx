@@ -164,11 +164,14 @@ export default function Layout({ children }) {
               <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
             )}
           </div>
+          <h2 className="text-gray-700 text-sm mr-2">
+                  Welcome, {user?.fullname || "Guest"}
+          </h2>
 
           <div className="relative">
             <button onClick={toggleDropdown} className="focus:outline-none">
               <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-sm font-semibold">
-                {user?.userName?.substring(0, 1).toUpperCase() || "GU"}
+                {user?.fullname?.substring(0,2).toUpperCase() || "GU"}
               </div>
             </button>
 
@@ -176,7 +179,7 @@ export default function Layout({ children }) {
               <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                 <div className="px-4 py-3 border-b border-gray-100">
                   <h2 className="text-gray-700 mr-4">
-                    Welcome, {user?.userName || "Guest"}
+                    Welcome, {user?.fullname || "Guest"}
                   </h2>
                 </div>
                 <ul className="py-1">
