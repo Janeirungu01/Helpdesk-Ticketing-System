@@ -30,10 +30,7 @@ const modalStyle = {
 
 const UserModal = ({ open, handleClose, editUser, onSave }) => {
   const [userData, setUserData] = useState(defaultUserData);
-
-  // useEffect(() => {
-  //   setUserData(editUser || defaultUserData);
-  // }, [editUser]);
+  
   useEffect(() => {
   setUserData(editUser ? { ...defaultUserData, ...editUser } : defaultUserData);
 }, [editUser]);
