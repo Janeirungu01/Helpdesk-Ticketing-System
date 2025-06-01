@@ -4,12 +4,11 @@ import { useState } from "react";
 import Login from "./components/Login";
 import Tickets from "./components/Tickets/Tickets";
 import Layout from "./components/Layout";
-import TicketForm from "./components/User/TicketForm";
+import TicketForm from "./components/Tickets/TicketForm";
 import KnowledgeBaseWrapper from "./components/KnowledgeBaseWrapper";
 import ManageUsers from "./components/ManageUsers/ManageUsers";
 import Dashboard from "./components/User/Dashboard";
 import Department from "./components/ManageDepartments";
-import TicketPage from "./components/User/TicketsPage";
 import { AuthProvider } from "./Helpers/Api/AuthContext";
 import Branches from "./components/Branches";
 import { SelectBranch } from "./components/SelectBranch";
@@ -89,17 +88,6 @@ function App() {
               </Layout>
             }
           />
-
-          <Route
-            path="/ticket-page"
-            element={
-              <TicketPage
-                tickets={tickets}
-                loggedInUser={loggedInUser}
-                setTickets={setTickets}
-              />
-            }
-          />
            <Route
             path="/add-branches"
             element={
@@ -116,8 +104,6 @@ function App() {
               </Layout>
             }
           />
-
-          <Route path="/ticket-page" element={<TicketPage />} />
         </Routes>
         <Toaster />
       </Router>
