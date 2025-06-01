@@ -1,4 +1,4 @@
-import useUsers from "./useUsers";
+import UseUsers from "./UseUsers";
 import UserTable from "./UserTable";
 import UserModal from "./UserModal";
 import UserFilters from "./UserFilters";
@@ -18,7 +18,7 @@ const ManageUsers = () => {
     handleSaveUser,
     isModalOpen,
     editUser,
-  } = useUsers();
+  } = UseUsers();
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">

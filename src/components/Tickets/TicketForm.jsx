@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../../Helpers/Api/AuthContext";
@@ -63,7 +63,6 @@ const TicketForm = () => {
     data.append("ticket[department_id]", formData.department_id);
     data.append("ticket[description]", formData.description);
     data.append("ticket[priority]", formData.priority);
-    // data.append("ticket[branch]", formData.branch);
     data.append("ticket[branch]", branch);
     data.append("ticket[status]", formData.status);
     if (formData.attachment) {
