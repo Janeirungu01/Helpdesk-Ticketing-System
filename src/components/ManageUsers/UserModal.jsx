@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {Modal, Box, Typography, TextField, Button, Select,  MenuItem,
   FormControl, } from "@mui/material";
 
+// const [branchesList, setBranchesList] = useState([]);
 const branchesList = ["FEDHA", "TASSIA", "UTAWALA", "KITENGELA", "MACHAKOS"];
 
 const defaultUserData = {
@@ -35,6 +36,21 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
   setUserData(editUser ? { ...defaultUserData, ...editUser } : defaultUserData);
 }, [editUser]);
 
+// useEffect(() => {
+//   const fetchBranches = async () => {
+//     try {
+//       const response = await fetch("http://127.0.0.1:3000/branches");
+//       const data = await response.json();
+//       setBranchesList(data);
+//     } catch (error) {
+//       console.error("Failed to fetch branches:", error);
+//     }
+//   };
+
+//   fetchBranches();
+// }, []);
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
@@ -49,26 +65,17 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
     }));
   };
  
-  const handleSubmit = async (e) => {
+   const handleSubmit = (e) => {
     e.preventDefault();
-    
     if (userData.password !== userData.password_confirmation) {
       alert("Passwords do not match!");
       return;
     }
-  
-    try {
-      await onSave(userData);
-      setUserData(defaultUserData);
-      handleClose();
-    } catch (error) {
-      console.error("Save operation failed:", error);
-    }
+    onSave(userData);
   };
 
   const handleCancel = () => {
-    setUserData(defaultUserData);
-  
+    setUserData(defaultUserData);  
     handleClose();
   };
 
@@ -121,7 +128,6 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
               >
                 <MenuItem value="Admin">Admin</MenuItem>
                 <MenuItem value="Agent">Agent</MenuItem>
-                <MenuItem value="Client">Client</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -133,6 +139,21 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
               </span>
             </Box>
             <Box display="flex" gap={2} flexWrap="wrap">
+{/* 
+              {branchesList.map((branch) => {
+              const branchName = typeof branch === "string" ? branch : branch.name;
+              return (
+                <label key={branchName} className="flex items-center text-xs gap-1">
+                  <input
+                    type="checkbox"
+                    checked={userData.branches.includes(branchName)}
+                    onChange={() => handleBranchToggle(branchName)}
+                  />
+                  {branchName}
+                </label>
+              );
+            })} */}
+
               {branchesList.map((branch) => (
                 <label key={branch} className="flex items-center text-xs gap-1">
                   <input
@@ -161,4 +182,3 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
 };
 
 export default UserModal;
-
