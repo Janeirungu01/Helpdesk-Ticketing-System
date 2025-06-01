@@ -171,7 +171,7 @@ export default function Layout({ children }) {
           <div className="relative">
             <button onClick={toggleDropdown} className="focus:outline-none">
               <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white text-sm font-semibold">
-                {user?.fullname?.substring(0,2).toUpperCase() || "GU"}
+                {user?.fullname?.substring(0,1).toUpperCase() || "GU"}
               </div>
             </button>
 
