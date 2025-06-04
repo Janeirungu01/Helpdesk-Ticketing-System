@@ -9,7 +9,6 @@ import KnowledgeBaseWrapper from "./components/KnowledgeBaseWrapper";
 import ManageUsers from "./components/ManageUsers/ManageUsers";
 import Dashboard from "./components/User/Dashboard";
 import Department from "./components/ManageDepartments";
-import { AuthProvider } from "./Helpers/Api/AuthContext";
 import Branches from "./components/Branches";
 import { SelectBranch } from "./components/SelectBranch";
 import CategoryManager from "./components/User/CategoryManager";
@@ -19,8 +18,8 @@ function App() {
   const [loggedInUser, setUser] = useState(null);
 
   return (
-    <AuthProvider>
-      <Router>
+    
+      <>
         <Routes>
           <Route path="/" element={<Login setUser={setUser} />} />
           <Route
@@ -106,8 +105,7 @@ function App() {
           />
         </Routes>
         <Toaster />
-      </Router>
-    </AuthProvider>
+      </>
   );
 }
 
