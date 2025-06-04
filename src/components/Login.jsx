@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import AxiosInstance from "../Helpers/Api/AxiosInstance";
@@ -20,59 +20,8 @@ function Login() {
       [name]: value,
     }));
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  // // const response = await AxiosInstance.post('/users/sign_in', { 
-  // //   user:{}
-    
-  // //   });
-  //   const { username, password } = logginData;
-
-  //   if (!username || !password) {
-  //     toast.error("Please fill in all fields");
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.post(
-  //       "http://127.0.0.1:3000/users/sign_in",
-  //       { user: { ...logginData } },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           // "Accept": "application/json"
-  //         },
-  //       }
-  //     );
-
-  //     const { token, user, message } = response.data;
-  //     console.log(response.data);
-  //     console.log(user);
-
-  //     localStorage.setItem("token", token);
-  //     localStorage.setItem("refresh_token", refresh_token);
-  //     localStorage.setItem("user", JSON.stringify(user));
-
-  //     setUser(user);
-  //     setToken(token);
-  //     // SetRefreshToken(refresh_token);
-
-  //     if (user.branches.length === 5) {
-  //       setCurrentBranch(user.branches[0]);
-  //       navigate("/tickets");
-  //     } else {
-  //       navigate("/select-branch");
-  //     }
-  //     toast.success(message);
-  //   } catch (error) {
-  //     console.error("Login failed:", error);
-  //     toast.error("Login failed. Please check your credentials.");
-  //   }
-  // };
   
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
   const { username, password } = logginData;
@@ -83,11 +32,16 @@ function Login() {
   }
 
   try {
-    const response = await AxiosInstance.post('/users/sign_in', {
+    const response = await AxiosInstance.post("/users/sign_in", {
       user: { username, password },
     });
 
     const { token, refresh_token, user, message } = response.data;
+
+    if (!token || !refresh_token || !user) {
+      toast.error("Invalid login response from server");
+      return;
+    }
 
     localStorage.setItem("token", token);
     localStorage.setItem("refresh_token", refresh_token);
@@ -102,12 +56,15 @@ function Login() {
     } else {
       navigate("/select-branch");
     }
-    toast.success(message);
+
+    toast.success(message || "Login successful");
   } catch (error) {
     console.error("Login failed:", error);
-    toast.error("Login failed. Please check your credentials.");
+    const serverError = error.response?.data?.error || "Login failed. Please check your credentials.";
+    toast.error(serverError);
   }
 };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-50 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
