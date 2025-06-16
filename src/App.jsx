@@ -1,6 +1,7 @@
 import { Toaster } from "react-hot-toast";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./Helpers/Api/AuthContext";
 import Login from "./components/Login";
 import Tickets from "./components/Tickets/Tickets";
 import Layout from "./components/Layout";
@@ -14,98 +15,88 @@ import { SelectBranch } from "./components/SelectBranch";
 import CategoryManager from "./components/User/CategoryManager";
 
 function App() {
-  const [tickets, setTickets] = useState();
-  const [loggedInUser, setUser] = useState(null);
+  const [tickets, setTickets] = useState([]);
 
   return (
-    
-      <>
-        <Routes>
-          <Route path="/" element={<Login setUser={setUser} />} />
-          <Route
-            path="/tickets"
-            element={
-              <Layout>
-                <Tickets tickets={tickets} />
-              </Layout>
-            }
-          />
-          <Route
-            path="/add-ticket"
-            element={
-              <Layout>
-                <TicketForm
-                  tickets={tickets}
-                  loggedInUser={loggedInUser}
-                  setTickets={setTickets}
-                />
-              </Layout>
-            }
-          />
-
-          <Route path="/" element={<Login setUser={setUser} />} />
-          <Route path="/select-branch" element={<SelectBranch />} />
-
-          <Route
-            path="/manage-users"
-            element={
-              <Layout>
-                <ManageUsers />
-              </Layout>
-            }
-          />
-          <Route
-            path="/view-users"
-            element={
-              <Layout>
-                <Dashboard />
-              </Layout>
-            }
-          />
-
-          <Route
-            path="/add-departments"
-            element={
-              <Layout>
-                <Department />
-              </Layout>
-            }
-          />
-          <Route
-            path="/faqs"
-            element={
-              <Layout>
-                <KnowledgeBaseWrapper view="Agent" />
-              </Layout>
-            }
-          />
-          <Route
-            path="/adminfaqs"
-            element={
-              <Layout>
-                <KnowledgeBaseWrapper view="Admin" />
-              </Layout>
-            }
-          />
-           <Route
-            path="/add-branches"
-            element={
-              <Layout>
-                <Branches />
-              </Layout>
-            }
-          />
-               <Route
-            path="/manage-categories"
-            element={
-              <Layout>
-                <CategoryManager />
-              </Layout>
-            }
-          />
-        </Routes>
-        <Toaster />
-      </>
+    <AuthProvider> 
+      <Routes>
+        <Route path="/" element={<Login />} /> 
+        <Route path="/select-branch" element={<SelectBranch />} />
+        <Route
+          path="/tickets"
+          element={
+            <Layout>
+              <Tickets tickets={tickets} />
+            </Layout>
+          }
+        />
+        <Route
+          path="/add-ticket"
+          element={
+            <Layout>
+              <TicketForm setTickets={setTickets} />
+            </Layout>
+          }
+        />
+        <Route
+          path="/manage-users"
+          element={
+            <Layout>
+              <ManageUsers />
+            </Layout>
+          }
+        />
+        <Route
+          path="/view-users"
+          element={
+            <Layout>
+              <Dashboard />
+            </Layout>
+          }
+        />
+        <Route
+          path="/add-departments"
+          element={
+            <Layout>
+              <Department />
+            </Layout>
+          }
+        />
+        <Route
+          path="/faqs"
+          element={
+            <Layout>
+              <KnowledgeBaseWrapper view="Agent" />
+            </Layout>
+          }
+        />
+        <Route
+          path="/adminfaqs"
+          element={
+            <Layout>
+              <KnowledgeBaseWrapper view="Admin" />
+            </Layout>
+          }
+        />
+        <Route
+          path="/add-branches"
+          element={
+            <Layout>
+              <Branches />
+            </Layout>
+          }
+        />
+        <Route
+          path="/manage-categories"
+          element={
+            <Layout>
+              <CategoryManager />
+            </Layout>
+          }
+        />
+      </Routes>
+      <Toaster />
+    </AuthProvider>
   );
 }
 
