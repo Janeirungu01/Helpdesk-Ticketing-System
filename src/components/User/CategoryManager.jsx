@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Axios } from "../../Helpers/Api/AxiosInstance";
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState([]);
@@ -7,8 +8,7 @@ const CategoryManager = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:3000/categories");
-      const data = await res.json();
+      const { data } = await Axios.get("/categories");
       setCategories(data);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -25,15 +25,10 @@ const CategoryManager = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:3000/categories", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newCategory }),
+      const { data: added } = await Axios.post("/categories", {
+        name: newCategory,
       });
 
-      if (!res.ok) throw new Error("Failed to add category");
-
-      const added = await res.json();
       setCategories([...categories, added]);
       setNewCategory("");
     } catch (err) {
@@ -47,7 +42,7 @@ const CategoryManager = () => {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
 
     try {
-      await fetch(`http://127.0.0.1:3000/categories/${id}`, { method: "DELETE" });
+      await Axios.delete(`/categories/${id}`);
       setCategories(categories.filter((cat) => cat.id !== id));
     } catch (err) {
       console.error("Delete error:", err);

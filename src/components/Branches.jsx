@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Axios } from '../Helpers/Api/AxiosInstance';
 
 const Branches = () => {
   const [branches, setBranches] = useState([]);
@@ -7,7 +7,7 @@ const Branches = () => {
   const [query, setQuery] = useState('');
 
   const fetchBranches = async (search = '') => {
-    const res = await axios.get(`http://127.0.0.1:3000/branches?query=${search}`);
+    const res = await Axios.get(`/branches?query=${search}`);
     setBranches(res.data);
   };
 
@@ -20,7 +20,7 @@ const Branches = () => {
     if (!name) return;
 
     try {
-      await axios.post('http://127.0.0.1:3000/branches', { branch: { name } });
+      await Axios.post('/branches', { branch: { name } });
       setName('');
       fetchBranches();
     } catch (error) {
@@ -30,7 +30,7 @@ const Branches = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:3000/branches/${id}`);
+      await Axios.delete(`/branches/${id}`);
       fetchBranches();
     } catch (error) {
       console.error(error);
@@ -51,8 +51,8 @@ const Branches = () => {
           type="text"
           placeholder="Branch Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="px-4 py-2 border rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1"
+          onChange={(e) => setName(e.target.value.toUpperCase())}
+          className="px-4 py-2 border capitalize rounded-md w-1/3 focus:outline-none focus:border-gray-700 focus:ring-1"
         />
         <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
           + Add Branch 
