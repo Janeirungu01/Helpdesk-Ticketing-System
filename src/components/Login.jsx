@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import AxiosInstance from "../Helpers/Api/AxiosInstance";
+import {Axios} from "../Helpers/Api/AxiosInstance";
 import { useAuth } from "../Helpers/Api/AuthContext";
 
 function Login() {
@@ -32,7 +32,7 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    const response = await AxiosInstance.post("/users/sign_in", {
+    const response = await Axios.post("/users/sign_in", {
       user: { username, password },
     });
 

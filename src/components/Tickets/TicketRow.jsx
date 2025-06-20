@@ -5,6 +5,10 @@ const TicketRow = ({ ticket, loggedInUser, onView, onResolve, onTakeAction, onRe
   const isAgent = loggedInUser?.usertype === "Agent";
   const isResolved = ticket.status === "resolved";
   const isClosed = ticket.closed === true || ticket.closed === "true";
+  const toSentenceCase = (str) => {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
 
   return (
     <tr
@@ -13,7 +17,7 @@ const TicketRow = ({ ticket, loggedInUser, onView, onResolve, onTakeAction, onRe
     >
       <td className="p-3 border">{ticket.ticket_id}</td>
       <td className="p-2 border">{ticket.created_by?.username || ticket.created_by_id?.username || ticket.created_by_id || "N/A"}</td>
-      <td className="p-2 border">{ticket.subject}</td>
+      <td className="p-2 border">{toSentenceCase(ticket.subject)}</td>
       <td className="p-2 border">{ticket.category}</td>
       <td className="p-2 border">{ticket.branch || 'N/A'}</td>
       <td className="p-2 border">{ticket.department?.name || ticket.department_id}</td>

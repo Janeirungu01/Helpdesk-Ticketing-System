@@ -1,58 +1,36 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @import "tailwindcss";
-@plugin "daisyui";
 
 @layer base {
-    /* h1, h2, h3, h4 h5{
-        @apply font-bold;
-    } */
-    /* h1 {
-         @apply {
-                text-4xl
-            }       
-    } */
-    /* h2 {
-        @apply {
-            text-3xl;
-        }
-    }
-    h3 {
-        @apply {
-            text-2xl;
-        }
-    }
-    h4 {
-        @apply {
-            text-xl;
-        }
-    } */
-}
-
-@layer base {
-	/* html {
-		font-family: 'Poppins', sans-serif;
-		line-height: 1.3;
-	} */
-	table {
-	}
-	th,
-	td {
-		@apply py-3 px-2.5 text-sm text-left border-y ;
-	}
-	thead {
-		@apply bg-neutral-100;
-	}
-	th {
-		@apply font-semibold;
-	}
-    input, select {
-        @apply text-sm p-10 text-gray-600;
-    }
-    label {
-        @apply  font-medium
-    }
-       
-    
+  html {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+  }
+  
+  table {
+    @apply w-full;
+  }
+  
+  th,
+  td {
+    @apply py-3 px-2.5 text-sm text-left border-y border-gray-200;
+  }
+  
+  thead {
+    @apply bg-neutral-100;
+  }
+  
+  th {
+    @apply font-semibold;
+  }
+  
+  input, 
+  select {
+    @apply text-sm p-2 text-gray-600 border border-gray-300 rounded;
+  }
+  
+  label {
+    @apply font-medium text-gray-700 text-sm mb-1 block;
+  }
 }

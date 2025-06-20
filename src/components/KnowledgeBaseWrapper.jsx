@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import KnowledgeBase from "./User/KnowledgeBase";
 import AdminKnowledgeBase from "./User/AdminKnowledgeBase";
-import axios from "axios";
+import { Axios } from "../Helpers/Api/AxiosInstance";
 
 function KnowledgeBaseWrapper({ view }) {
   const [articles, setArticles] = useState(() => {
@@ -10,7 +10,7 @@ function KnowledgeBaseWrapper({ view }) {
   });
   
   useEffect(() => {
-    axios.get("http://127.0.0.1:3000/articles")
+    Axios.get("/articles") 
       .then((res) => setArticles(res.data))
       .catch((err) => console.error("Error fetching articles:", err));
   }, []);

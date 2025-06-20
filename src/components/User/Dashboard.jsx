@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis,  Tooltip,
   Legend, ResponsiveContainer,} from "recharts";
 import {FiCheckCircle, FiClock, FiLoader, FiAlertCircle,} from "react-icons/fi";
-import axios from "axios";
 import DateSearchForm from "../Tickets/DateSearchForm";
+import AxiosInstance from "../../Helpers/Api/AxiosInstance"
 
 const COLORS = ["#F87171", "#FBBF24", "#60A5FA", "#34D399"];
 
@@ -23,12 +23,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://127.0.0.1:3000/tickets", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+        const response = await AxiosInstance.get("/tickets", {
         });
         setTickets(response.data);
       } catch (error) {

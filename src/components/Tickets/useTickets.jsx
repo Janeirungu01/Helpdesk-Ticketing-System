@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import AxiosInstance from "../../Helpers/Api/AxiosInstance"
 
 export const useTickets = () => {
+  const abortController = new AbortController();
   const loggedInUser = JSON.parse(localStorage.getItem("user"));
   const [ticketList, setTicketList] = useState([]);
   const [filteredTickets, setFilteredTickets] = useState([]);
@@ -9,19 +11,16 @@ export const useTickets = () => {
   const [error, setError] = useState(null);
 
   const fetchTickets = async () => {
+    console.log("CLICKED")
     try {
       setIsLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch("http://127.0.0.1:3000/tickets", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+      const response = await AxiosInstance.get("/tickets", 
+        {
+          signal: abortController.signal
         }
-      });
+      )
 
-      if (!response.ok) throw new Error("Failed to fetch tickets");
-
-      const data = await response.json();
+      const data = response?.data;
       const sortedTickets = data
         .map(ticket => ({
           ...ticket,
@@ -34,6 +33,8 @@ export const useTickets = () => {
       localStorage.setItem("tickets", JSON.stringify(sortedTickets));
     } catch (err) {
       setError(err.message);
+      console.log("FETCH ERR: "+err.message)
+      abortController.abort();
     } finally {
       setIsLoading(false);
     }
