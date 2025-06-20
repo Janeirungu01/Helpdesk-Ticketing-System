@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Axios } from "../Helpers/Api/AxiosInstance";
 import {Modal, Box, Typography, TextField, Button, Switch, FormControlLabel,} from "@mui/material";
 
 const ManageDepartments = () => {
@@ -6,6 +7,7 @@ const ManageDepartments = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editDept, setEditDept] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const openModal = () => {
     setEditDept(null);
@@ -18,47 +20,51 @@ const ManageDepartments = () => {
   };
 
   const closeModal = () => setIsModalOpen(false);
-
+  
   const handleToggleVisibility = (id) => {
-    setDepartments((prev) =>
-      prev.map((dept) =>
-        dept.id === id ? { ...dept, visible: !dept.visible } : dept
-      )
-    );
-  };
+  const department = departments.find(dept => dept.id === id);
+  if (!department) return;
+
+  Axios.patch(`/departments/${id}`, { 
+    department: { visible: !department.visible } 
+  })
+    .then((response) => {
+      setDepartments((prev) =>
+        prev.map((dept) =>
+          dept.id === id ? response.data : dept
+        )
+      );
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
 
   const handleSaveDepartment = (deptData) => {
-    if (editDept) {
-      fetch(`http://127.0.0.1:3000/departments/${editDept.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ department: deptData }),
-      })
-      .then(res => res.json())
-      .then((updated) => {
-        setDepartments((prev) => prev.map((d) => d.id === updated.id ? updated : d));
+  if (editDept) {
+    Axios.patch(`/departments/${editDept.id}`, { department: deptData })
+      .then((response) => {
+        setDepartments((prev) => prev.map((d) => d.id === response.data.id ? response.data : d));
         closeModal();
-      });
-    } else {
-      fetch("http://127.0.0.1:3000/departments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ department: deptData }),
       })
-      .then(res => res.json())
-      .then((newDept) => {
-        setDepartments((prev) => [...prev, newDept]);
-        closeModal();
-      });
-    }
-  };
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:3000/departments")
-      .then((res) => res.json())
-      .then((data) => setDepartments(data))
       .catch((err) => console.error(err));
-  }, []);  
+  } else {
+    Axios.post("/departments", { department: deptData })
+      .then((response) => {
+        setDepartments((prev) => [...prev, response.data]);
+        closeModal();
+      })
+      .catch((err) => console.error(err));
+  }
+}; 
+
+useEffect(() => {
+  setLoading(true);
+  Axios.get("/departments")
+    .then((response) => setDepartments(response.data))
+    .catch((err) => console.error(err))
+    .finally(() => setLoading(false));
+}, []);
 
   const filteredDepartments = departments.filter((dept) =>
     dept.name.toLowerCase().includes(searchQuery.toLowerCase())
