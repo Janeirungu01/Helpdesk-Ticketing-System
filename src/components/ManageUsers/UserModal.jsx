@@ -36,21 +36,6 @@ const UserModal = ({ open, handleClose, editUser, onSave }) => {
   setUserData(editUser ? { ...defaultUserData, ...editUser } : defaultUserData);
 }, [editUser]);
 
-// useEffect(() => {
-//   const fetchBranches = async () => {
-//     try {
-//       const response = await fetch("http://127.0.0.1:3000/branches");
-//       const data = await response.json();
-//       setBranchesList(data);
-//     } catch (error) {
-//       console.error("Failed to fetch branches:", error);
-//     }
-//   };
-
-//   fetchBranches();
-// }, []);
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-//const BASE_URL =  "http://192.168..0.19:3000";
+// const BASE_URL =  "http://192.168.0.19:3060";
 const BASE_URL =  "http://localhost:3000";
 
 export const Axios = axios.create({
@@ -41,17 +41,12 @@ AxiosInstance.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem("refresh_token");
         if (!refreshToken) throw new Error("Missing refresh token");
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:3000"}/tokens/refresh`,
-          {},
-          {
-            headers: {
-              "Refresh-Token": refreshToken,
-              'Content-Type': 'application/json'
-            },
+         const response = await AxiosInstance.post("/tokens/refresh", {}, {
+          headers: {
+            "Refresh-Token": refreshToken,
+            "Authorization": undefined
           }
-        );
-
+        });
 
         const newAccessToken = response.data.token;
         localStorage.setItem("token", newAccessToken);

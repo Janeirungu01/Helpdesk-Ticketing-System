@@ -1,58 +1,12 @@
-# 🎫 Ticketing System
+# React + Vite
 
-A simple and responsive ticketing system built with **React** and **Tailwind CSS**. This app allows users to create support tickets and admins to view, manage and resolve them efficiently.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## ✨ Features
+Currently, two official plugins are available:
 
-- 🔐 Role-based UI for **Regular Users** and **Admins**
-- 📝 Create tickets with category, priority, department and description
-- 🗂️ View a list of all tickets in a clean tabular format
-- 🟢 Color-coded status and priority indicators
-- 🔍 Detailed modal view for each ticket
-- ✅ Admins can resolve tickets with optional resolution notes
-- 💾 Ticket data stored and synced in `localStorage`
-- 📱 Fully responsive design
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## 🚀 Getting Started
+## Expanding the ESLint configuration
 
-### Prerequisites
-
-- Node.js (v14+)
-- npm or yarn
-
-
-
-🧠 Tech Stack
-Frontend
-React 
-
-Tailwind CSS
-
-React Router
-
-Axios (for API requests)
-
-Backend
-Ruby on Rails (API mode)
-
-PostgreSQL (database)
-
-Jbuilder or ActiveModel::Serializers (for JSON responses)
-
-
-🚀 Getting Started
-Prerequisites
-Node.js (v14+)
-
-npm or yarn
-
-Ruby (v3.3+)
-
-Rails (v8+)
-
-PostgreSQL
-
-
-
-
-
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

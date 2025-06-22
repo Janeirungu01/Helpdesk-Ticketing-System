@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "../../Helpers/Api/AuthContext";
-import axios from "axios";
+import AxiosInstance from "../../Helpers/Api/AxiosInstance";
 
 const TicketForm = () => {
-  const { token, branch } = useAuth();
+  const { branch } = useAuth(); 
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -57,6 +57,7 @@ const TicketForm = () => {
       navigate("/select-branch");
       return;
     }
+    
     const data = new FormData();
     data.append("ticket[subject]", formData.subject.trim());
     data.append("ticket[category]", formData.category);
@@ -70,31 +71,28 @@ const TicketForm = () => {
     }
 
     try {
-      await axios.post("http://127.0.0.1:3000/tickets", data, {
+      await AxiosInstance.post("/tickets", data, {
         headers: {
-          Authorization: `Bearer ${token.trim()}`,
-
+          "Content-Type": "multipart/form-data", 
           Accept: "application/json",
         },
       });
-      alert("Ticket submitted!");
+      toast.success("Ticket submitted successfully!");
       navigate("/tickets");
     } catch (error) {
       if (error.response) {
         console.error("Response Error:", error.response.data);
-        console.error("Status:", error.response.status);
-        console.error("Headers:", error.response.headers);
-        alert(
+        toast.error(
           `Failed to submit ticket: ${
             error.response.data?.error || "Server Error"
           }`
         );
       } else if (error.request) {
         console.error("No response received:", error.request);
-        alert("No response received from the server.");
+        toast.error("No response received from the server.");
       } else {
         console.error("Error setting up request:", error.message);
-        alert("Error setting up the request.");
+        toast.error("Error setting up the request.");
       }
     }
   };
@@ -103,12 +101,8 @@ const TicketForm = () => {
     const fetchDepartmentsAndCategories = async () => {
       try {
         const [deptRes, catRes] = await Promise.all([
-          axios.get("http://127.0.0.1:3000/departments", {
-            headers: { Authorization: `Bearer ${token.trim()}` },
-          }),
-          axios.get("http://127.0.0.1:3000/categories", {
-            headers: { Authorization: `Bearer ${token.trim()}` },
-          }),
+          AxiosInstance.get("/departments"), 
+          AxiosInstance.get("/categories"),
         ]);
         setDepartments(deptRes.data);
         setCategories(catRes.data);
@@ -119,17 +113,17 @@ const TicketForm = () => {
     };
 
     fetchDepartmentsAndCategories();
-  }, [token]);
+  }, []); 
 
   return (
     <div className="p-4 max-w-6xl mx-auto text-gray-600">
       <form onSubmit={handleSubmit} className="space-y-4 mb-6">
-        <div>
+       <div>
           <label className="block text-lg font-semibold capitalize text-gray-600 ">
-            Subject <span className="text-red-500">*</span>
-          </label>
+           Subject <span className="text-red-500">*</span>
+         </label>
 
-          <input
+         <input
             type="text"
             name="subject"
             value={formData.subject}
@@ -187,7 +181,6 @@ const TicketForm = () => {
             name="priority"
             value={formData.priority}
             onChange={handleChange}
-            // className="w-3/4 border border-gray-300 p-2 mt-1 rounded focus:outline-none focus:border-gray-700"
             className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="high">High</option>
@@ -217,7 +210,6 @@ const TicketForm = () => {
             name="attachment"
             accept=".pdf,image/*"
             onChange={handleChange}
-            // className="w-3/4 border border-gray-300 p-2 rounded"
             className="w-3/4 p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
           <p className="text-sm text-gray-500 mt-1">
@@ -235,7 +227,6 @@ const TicketForm = () => {
         </div>
       </form>
     </div>
-    // </div>
   );
 };
 

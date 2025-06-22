@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaBars, FaTimes, FaTicketAlt, FaPlus, FaSignOutAlt, FaBell} from "react-icons/fa";
 import { FiBookOpen, FiGitBranch, FiGrid } from "react-icons/fi";
+import { Axios } from "../Helpers/Api/AxiosInstance";
 import axios from "axios";
 
 import { MdDashboard, MdBusiness } from "react-icons/md";
@@ -21,7 +22,7 @@ export default function Layout({ children }) {
 
   const handleLogout = async () => {
     try {
-      await axios.delete("http://127.0.0.1:3000/users/sign_out", {
+      await Axios.delete("/users/sign_out", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",

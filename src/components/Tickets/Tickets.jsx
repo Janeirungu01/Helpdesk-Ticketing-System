@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTickets } from "./useTickets";
+import AxiosInstance from "../../Helpers/Api/AxiosInstance";
 import TicketRow from "./TicketRow";
 import { ResolveModal, ViewModal, ActionPrompt } from "./TicketModals";
 import DateSearchForm from "./DateSearchForm";
@@ -41,96 +42,63 @@ function Tickets() {
     loggedInUser?.usertype === "Admin" || !ticket.closed;
 
   const handleResolveTicket = async (notes) => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://127.0.0.1:3000/tickets/${selectedTicket.ticket_id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ticket: {
-              status: "resolved",
-              notes,
-              updated_at: new Date().toISOString(),
-            },
-          }),
-        }
-      );
+  try {
+    const response = await AxiosInstance.patch(
+      `/tickets/${selectedTicket.ticket_id}`,
+      {
+        ticket: {
+          status: "resolved",
+          notes,
+          updated_at: new Date().toISOString(),
+        },
+      }
+    );
 
-      if (!response.ok) throw new Error("Failed to resolve ticket");
-
-      const updated = await response.json();
-      updateTicket(updated.ticket_id, updated);
-      setPromptOpen(true);
-      setIsResolveModalOpen(false);
-    } catch (error) {
-      console.error("Error resolving ticket:", error);
-    }
-  };
+    updateTicket(response.data.ticket_id, response.data);
+    setPromptOpen(true);
+    setIsResolveModalOpen(false);
+  } catch (error) {
+    console.error("Error resolving ticket:", error);
+  }
+};
 
   const handleCloseTicket = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://127.0.0.1:3000/tickets/${selectedTicket.ticket_id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ticket: {
-              status: "closed",
-            },
-          }),
-        }
-      );
+  try {
+    const response = await AxiosInstance.patch(
+      `/tickets/${selectedTicket.ticket_id}`,
+      {
+        ticket: {
+          status: "closed",
+        },
+      }
+    );
 
-      if (!response.ok) throw new Error("Failed to close ticket");
+    updateTicket(response.data.ticket_id, response.data);
+    setPromptOpen(false);
+  } catch (error) {
+    console.error("Error closing ticket:", error);
+  }
+};
 
-      const updated = await response.json();
-      updateTicket(updated.ticket_id, updated);
-      setPromptOpen(false);
-    } catch (error) {
-      console.error("Error closing ticket:", error);
-    }
-  };
+const handleReopenTicket = async () => {
+  try {
+    const response = await AxiosInstance.patch(
+      `/tickets/${selectedTicket.ticket_id}`,
+      {
+        ticket: {
+          closed: false,
+          status: "reopened",
+          updated_at: new Date().toISOString(),
+        },
+      }
+    );
 
-  const handleReopenTicket = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `http://127.0.0.1:3000/tickets/${selectedTicket.ticket_id}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ticket: {
-              closed: false,
-              status: "reopened",
-              updated_at: new Date().toISOString(),
-            },
-          }),
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to reopen ticket");
-
-      const updated = await response.json();
-      updateTicket(updated.ticket_id, updated);
-      setPromptOpen(false);
-    } catch (error) {
-      console.error("Error reopening ticket:", error);
-    }
-  };
+    updateTicket(response.data.ticket_id, response.data);
+    setPromptOpen(false);
+  } catch (error) {
+    console.error("Error reopening ticket:", error);
+  }
+};
 
   return (
     <div className="flex justify-center items-center md:px-2">

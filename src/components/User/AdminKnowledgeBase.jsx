@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { Axios } from "../../Helpers/Api/AxiosInstance";
 
 const initialForm = { question: "", answer: "", category: "", tags: "" };
 
@@ -22,8 +22,7 @@ function AdminKnowledgeBase({ articles = [], setArticles }) {
   };
 
   if (editingArticle) {
-    axios
-      .put(`http://127.0.0.1:3000/articles/${editingArticle.id}`, payload)
+    Axios.put(`/articles/${editingArticle.id}`, payload)
       .then((res) => {
         setArticles((prev) =>
           prev.map((a) => (a.id === res.data.id ? res.data : a))
@@ -32,7 +31,7 @@ function AdminKnowledgeBase({ articles = [], setArticles }) {
         setForm(initialForm);
       });
   } else {
-    axios.post("http://127.0.0.1:3000/articles", payload).then((res) => {
+    Axios.post("/articles", payload).then((res) => {
       setArticles((prev) => [...prev, res.data]);
       setForm(initialForm);
     });
@@ -52,8 +51,7 @@ const handleEdit = (article) => {
 
   const handleDelete = (id) => {
     if (window.confirm("Delete this article?")) {
-      axios
-        .delete(`http://127.0.0.1:3000/articles/${id}`)
+      Axios.delete(`/articles/${id}`)
         .then(() => setArticles((prev) => prev.filter((a) => a.id !== id)));
     }
   };
