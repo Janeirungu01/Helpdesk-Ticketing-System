@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FaBars, FaTimes, FaTicketAlt, FaPlus, FaSignOutAlt, FaBell} from "react-icons/fa";
 import { FiBookOpen, FiGitBranch, FiGrid } from "react-icons/fi";
-import { Axios } from "../Helpers/Api/AxiosInstance";
-import axios from "axios";
+import AxiosInstance from "../Helpers/Api/AxiosInstance";
 
 import { MdDashboard, MdBusiness } from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
@@ -13,8 +12,7 @@ export default function Layout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hasNotification, setHasNotification] = useState(true);
-  const user = JSON.parse(localStorage.getItem("user"));
-  const { token, setUser, setToken } = useAuth();
+  const {user, setUser, setToken } = useAuth();
   const navigate = useNavigate();
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
@@ -22,18 +20,13 @@ export default function Layout({ children }) {
 
   const handleLogout = async () => {
     try {
-      await Axios.delete("/users/sign_out", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await AxiosInstance.delete("/users/sign_out");
     } catch (error) {
       console.warn("Logout request failed:", error);
     } finally {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
+      localStorage.removeItem("refresh_token");
       setUser(null);
       setToken("");
       navigate("/");
