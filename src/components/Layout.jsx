@@ -43,7 +43,7 @@ export default function Layout({ children }) {
         } md:translate-x-0 md:static md:flex w-64 bg-blue-700 text-white transition-transform duration-300 flex-col`}
       >
         <div className="flex items-center justify-between p-4 border-b border-blue-600">
-          <h2 className="text-lg font-bold">Bristol Desk</h2>
+          <h2 className="text-lg font-bold">Helpdesk Ticketing</h2>
           <button
             onClick={toggleSidebar}
             className="md:hidden text-white text-xl focus:outline-none"

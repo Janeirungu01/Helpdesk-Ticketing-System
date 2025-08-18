@@ -69,12 +69,12 @@ const handleSubmit = async (e) => {
     <div className="flex items-center justify-center min-h-screen bg-blue-50 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600 drop-shadow-lg tracking-wide">
-          Bristol Desk
+          Login Here
         </h2>
 
-        <h3 className="text-xl font-bold text-center text-gray-700 mb-4 mt-6">
-          Login Here
-        </h3>
+        {/* <h3 className="text-xl font-bold text-center text-gray-700 mb-4 mt-6">
+          Lxxx
+        </h3> */}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
